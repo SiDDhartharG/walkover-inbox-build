@@ -7,7 +7,7 @@
     "theme_color": "#0175C2",
     "description": "A new Flutter application.",
     "orientation": "portrait-primary",
-    "prefer_related_applications": false,
+    "prefer_red_applications": false,
     "icons": [
         {
             "src": "icons/Icon-192.png",

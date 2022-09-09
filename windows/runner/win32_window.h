@@ -63,7 +63,7 @@ class Win32Window {
                                  WPARAM const wparam,
                                  LPARAM const lparam) noexcept;
 
-  // Called when CreateAndShow is called, allowing subclass window-related
+  // Called when CreateAndShow is called, allowing subclass window-red
   // setup. Subclasses should return false if setup fails.
   virtual bool OnCreate();
 

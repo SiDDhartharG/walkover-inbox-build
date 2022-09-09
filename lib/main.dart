@@ -108,7 +108,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -134,19 +134,19 @@ class _MyAppState extends State<MyApp> {
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late Box<String> currentTokenBox;
-  late Box<String> activeOrgIdBox;
+  Box<String> currentTokenBox;
+  Box<String> activeOrgIdBox;
   final url = NetworkUrl.publicKey;
-  String? publicKey;
+  String publicKey;
   bool isLinkPresent = false;
-  String? fetchedToken;
+  String fetchedToken;
 
   @override
   void initState() {

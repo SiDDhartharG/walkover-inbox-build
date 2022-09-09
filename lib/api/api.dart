@@ -43,8 +43,8 @@ class APICalls {
       activeOrgId, activeUserId) async {
     String allUserEmailAddressAPI = NetworkUrl.AllUserEmailAddress;
     dynamic replaceUrl = allUserEmailAddressAPI
-        .replaceFirst(':orgId', activeOrgId!)
-        .replaceFirst(':userId', activeUserId!);
+        .replaceFirst(':orgId', activeOrgId)
+        .replaceFirst(':userId', activeUserId);
     return jsonDecode((await protectedClient.get(Uri.parse(replaceUrl))).body);
   }
 
@@ -53,7 +53,7 @@ class APICalls {
     String allUserEmailAddressAPI = NetworkUrl.defaultUserEmailAddress;
     dynamic replaceUrl = allUserEmailAddressAPI
         .replaceFirst(':orgId', activeOrgId)
-        .replaceFirst(':userId', activeUserId!);
+        .replaceFirst(':userId', activeUserId);
     return jsonDecode((await protectedClient.get(Uri.parse(replaceUrl))).body);
   }
 
@@ -74,7 +74,7 @@ class APICalls {
     dynamic replaceOrgUrl = mailurl
         .replaceFirst(':query', query)
         .replaceFirst(':mail-owner-name', mailOwnerName)
-        .replaceFirst(':orgId', activeOrgId!);
+        .replaceFirst(':orgId', activeOrgId);
     return jsonDecode(
         (await protectedClient.get(Uri.parse(replaceOrgUrl))).body);
   }

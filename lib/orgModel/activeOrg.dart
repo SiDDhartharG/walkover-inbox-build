@@ -6,18 +6,19 @@ part 'activeOrg.g.dart';
 class ActiveOrg {
   ActiveOrg();
 
-  late String avatar;
-  late String email;
-  late String id;
-  late String username;
-  late String firstName;
-  late String lastName;
-  late String displayName;
-  late String avatarKey;
-  late String createdAt;
-  late String updatedAt;
-  late List<Orgs> orgs;
-  
-  factory ActiveOrg.fromJson(Map<String,dynamic> json) => _$ActiveOrgFromJson(json);
+  String avatar;
+  String email;
+  String id;
+  String username;
+  String firstName;
+  String lastName;
+  String displayName;
+  String avatarKey;
+  String createdAt;
+  String updatedAt;
+  List<Orgs> orgs;
+
+  factory ActiveOrg.fromJson(Map<String, dynamic> json) =>
+      _$ActiveOrgFromJson(json);
   Map<String, dynamic> toJson() => _$ActiveOrgToJson(this);
 }

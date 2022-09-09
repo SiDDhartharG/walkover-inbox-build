@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_feathersjs/flutter_feathersjs.dart';
 import 'package:hive/hive.dart';
 import 'package:inbox/constants/network_url.dart';
@@ -11,16 +10,16 @@ import 'package:inbox/constants/app_colors.dart';
 
 class MyLogin extends StatefulWidget {
   dynamic publicKey;
-  MyLogin({Key? key, this.publicKey}) : super(key: key);
+  MyLogin({Key key, this.publicKey}) : super(key: key);
 
   @override
   _MyLoginState createState() => _MyLoginState();
 }
 
 class _MyLoginState extends State<MyLogin> {
-  late Box<String> currentTokenBox;
-  late Box<String> activeOrgIdBox;
-  FlutterFeathersjs? flutterFeathersjs;
+  Box<String> currentTokenBox;
+  Box<String> activeOrgIdBox;
+  FlutterFeathersjs flutterFeathersjs;
 
   void navigateToDashboard(link) async {
     dynamic currentToken = currentTokenBox.get('currentToken');
@@ -86,7 +85,7 @@ class _MyLoginState extends State<MyLogin> {
                     margin: const EdgeInsets.only(left: 35, right: 35),
                     child: Column(
                       children: [
-                        StreamBuilder<Uri?>(
+                        StreamBuilder<Uri>(
                             stream: uriLinkStream,
                             builder: (context, snapshot) {
                               final link = snapshot.data ?? '';

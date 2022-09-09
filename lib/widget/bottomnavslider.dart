@@ -5,8 +5,7 @@ import 'package:inbox/constants/app_colors.dart';
 class BottomNavSlider extends StatefulWidget {
   Function customFuction;
   String dashboardSelectTag;
-  BottomNavSlider(
-      {Key? key, required this.customFuction, this.dashboardSelectTag = ''})
+  BottomNavSlider({Key key, this.customFuction, this.dashboardSelectTag = ''})
       : super(key: key);
 
   @override
@@ -14,7 +13,7 @@ class BottomNavSlider extends StatefulWidget {
 }
 
 class _BootamNavState extends State<BottomNavSlider> {
-  late int currentIndex = 0;
+  int currentIndex = 0;
 
   List<String> categories = [
     "ALL",
@@ -36,8 +35,8 @@ class _BootamNavState extends State<BottomNavSlider> {
     }
   }
 
-  void changePage(int? index) {
-    widget.customFuction(categories[index!]);
+  void changePage(int index) {
+    widget.customFuction(categories[index]);
     setState(() {
       currentIndex = index;
     });

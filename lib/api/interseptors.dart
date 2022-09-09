@@ -7,7 +7,7 @@ import 'package:inbox/utils/logout.dart';
 class ProtectedApiInterceptor implements InterceptorContract {
   Box<String> currentTokenBox = Hive.box("accessToken");
   @override
-  Future<RequestData> interceptRequest({required RequestData data}) async {
+  Future<RequestData> interceptRequest({RequestData data}) async {
     String token = await Logout.checkForLogout();
     try {
       data.headers["Authorization"] = token;
@@ -19,7 +19,7 @@ class ProtectedApiInterceptor implements InterceptorContract {
   }
 
   @override
-  Future<ResponseData> interceptResponse({required ResponseData data}) async {
+  Future<ResponseData> interceptResponse({ResponseData data}) async {
     if (data.statusCode == 401) {
       Logout.logout();
     }

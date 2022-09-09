@@ -7,9 +7,9 @@ class SheetContent extends StatelessWidget {
   final List options;
   final selectedOption;
   const SheetContent({
-    required this.options,
+    this.options,
     this.selectedOption,
-    Key? key,
+    Key key,
   }) : super(key: key);
 
   @override

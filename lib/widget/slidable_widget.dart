@@ -14,10 +14,10 @@ class SlidableWidget extends StatelessWidget {
   final Function(SlidableAction action) onDismissed;
 
   const SlidableWidget({
-    required this.child,
-    required this.onDismissed,
-    required this.mailObject,
-    Key? key,
+    this.child,
+    this.onDismissed,
+    this.mailObject,
+    Key key,
   }) : super(key: key);
 
   List<Widget> getRandomWidgetArray() {
