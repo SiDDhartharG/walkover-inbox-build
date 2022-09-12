@@ -10,7 +10,7 @@ import '../screens/login.dart';
 
 class Logout {
   static Box<String> currentTokenBox = Hive.box("accessToken");
-  static String signOutUrl = NetworkUrl.AuthUrl ?? "";
+  static String signOutUrl = NetworkUrl.login ?? "";
 
   static Future checkForLogout() async {
     dynamic token = currentTokenBox.get('currentToken');

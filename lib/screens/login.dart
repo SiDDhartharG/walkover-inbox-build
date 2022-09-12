@@ -41,7 +41,7 @@ class _MyLoginState extends State<MyLogin> {
   }
 
   void fetchTokenViaLogin() async {
-    String url = NetworkUrl.AuthUrl ?? "";
+    String url = NetworkUrl.login ?? "";
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false);
     } else {
