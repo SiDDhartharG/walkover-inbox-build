@@ -257,7 +257,12 @@ class ComposeScreenState extends State<ComposeScreen>
         "from": widget.emailAddress.id,
         "cc": ccEmailIds,
         "bcc": bccEmailIds,
-        "body": {"data": _bodyController.value.text, "type": "text/html"},
+        "body": {
+          "data": _bodyController.value.text != ""
+              ? _bodyController.value.text
+              : "(no body)",
+          "type": "text/html"
+        },
         "subject": _subjectController.value.text != ""
             ? _subjectController.value.text
             : "(no subject)",
@@ -589,7 +594,7 @@ class ComposeScreenState extends State<ComposeScreen>
           },
         ),
         title: const Text(
-          "Save",
+          "New Mail",
           style: TextStyle(color: AppColor.colorComposeIcons),
         ),
         actions: [
