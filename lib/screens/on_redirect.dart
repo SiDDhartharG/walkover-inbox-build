@@ -14,7 +14,6 @@ class _OnRedirectState extends State<OnRedirect> {
   void initState() {
     super.initState();
     setState(() {
-      print(Uri.base);
       text = Uri.base.queryParameters['orgId'] ?? "NOT HERE";
     });
   }

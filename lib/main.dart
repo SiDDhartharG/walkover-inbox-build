@@ -82,11 +82,8 @@ void fcmConfigs() async {
         "";
   } else {
     await Firebase.initializeApp();
-
     token = await FirebaseMessaging.instance.getToken() ?? "";
   }
-  print("token");
-  print(token);
   Box<String> deviceToken = Hive.box<String>("deviceToken");
   await deviceToken.put("deviceToken", token);
 }
@@ -124,9 +121,7 @@ class _MyAppState extends State<MyApp> {
     Map<String, String> params = uri.queryParameters;
     if (uri.path.toString().contains("login")) {
       String orgId = params['org'] ?? "";
-      print(orgId);
       String tokenId = params['token'] ?? '';
-      print(tokenId);
       await currentTokenBox.put("currentToken", tokenId);
       await activeOrgIdBox.put("orgId", orgId);
     }
@@ -151,26 +146,19 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => const SplashScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
       },
-      onUnknownRoute: ((settings) {
-        print("settings.name.toString()");
-        print(settings.name);
-        Uri uri = Uri.dataFromString(settings.name.toString());
-        print("uri");
-        print(uri);
-        checkIfLoginAndSetToken(uri).then((_) {
-          return MaterialPageRoute(
-            builder: (context) => DashBoardPage(),
-          );
-        }).catchError((onError) {
-          // ignore: invalid_return_type_for_catch_error
-          return null;
-        });
-      }),
-      // onGenerateRoute: ((settings) {
-      //   print(settings.name.toString());
+      // onUnknownRoute: ((settings) {
       //   Uri uri = Uri.dataFromString(settings.name.toString());
-      //   print("uri");
-      //   print(uri);
+      //   checkIfLoginAndSetToken(uri).then((_) {
+      //     return MaterialPageRoute(
+      //       builder: (context) => DashBoardPage(),
+      //     );
+      //   }).catchError((onError) {
+      //     // ignore: invalid_return_type_for_catch_error
+      //     return null;
+      //   });
+      // }),
+      // onGenerateRoute: ((settings) {
+      //   Uri uri = Uri.dataFromString(settings.name.toString());
       //   checkIfLoginAndSetToken(uri).then((_) {
       //     return MaterialPageRoute(builder: (_) => DashBoardPage());
       //   }).catchError((onError) {
@@ -182,13 +170,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Route? function(settings) {
-  //   print(settings.name.toString());
   //   Uri uri = Uri.dataFromString(settings.name.toString());
-  //   print("uri");
-  //   print(uri);
   //   checkIfLoginAndSetToken(uri).then((value) {
-  //     print("value");
-  //     print(value);
   //     return MaterialPageRoute(builder: (_) => DashBoardPage());
   //   }).catchError((onError) {
   //     print(onError);
@@ -215,7 +198,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-       currentTokenBox = Hive.box("accessToken");
+    currentTokenBox = Hive.box("accessToken");
     activeOrgIdBox = Hive.box("activeOrgId");
     currentTokenBox.put("currentToken", '${dotenv.env["PERSONAL_TOKEN"]}');
     activeOrgIdBox.put("orgId", '${dotenv.env["ORG_ID"]}');
@@ -251,9 +234,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-        splash: SvgPicture.asset('splashScreen.svg'),
-        nextScreen: MyLogin(),
-        splashTransition: SplashTransition.scaleTransition);
+    return Center(
+      heightFactor: 2.5,
+      child: Image.asset(
+        'splashScreen.png',
+        height: 100,
+        width: 100,
+      ),
+    );
   }
 }

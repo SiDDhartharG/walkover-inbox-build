@@ -401,7 +401,7 @@ class _MailListPageState extends State<MailListPage> {
                   )
             : Center(
                 child: Image.asset(
-                  'empty1.png',
+                  'empty.png',
                   height: 250,
                   width: 250,
                 ),

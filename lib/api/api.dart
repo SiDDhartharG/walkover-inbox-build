@@ -30,7 +30,6 @@ class APICalls {
   }
 
   static Future<Map<String, dynamic>> sendFCMToken(String token) async {
-    print(token);
     return jsonDecode((await protectedClient.post(
             Uri.parse(NetworkUrl.deviceTokenRegistrationURL),
             body: json.encode({

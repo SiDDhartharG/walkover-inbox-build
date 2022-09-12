@@ -17,7 +17,7 @@ class UserEmailAddressModelAdapter extends TypeAdapter<UserEmailAddressModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserEmailAddressModel()
-      .._userEmailAddress = (fields[0] as List).cast<UserEmailAddress>()
+      .._userEmailAddress = (fields[0] as List)?.cast<UserEmailAddress>()
       .._unreadCount = (fields[1] as List).cast<UnreadCount>();
   }
 
@@ -169,7 +169,8 @@ class EmailaddressAdapter extends TypeAdapter<Email_address> {
       .._createdAt = fields[11] as String
       .._updatedAt = fields[12] as String
       .._emailDomainOrg = fields[13] as Email_domain_org
-      .._userEmailAddresses = (fields[14] as List).cast<User_email_addresses>();
+      .._userEmailAddresses =
+          (fields[14] as List)?.cast<User_email_addresses>();
   }
 
   @override

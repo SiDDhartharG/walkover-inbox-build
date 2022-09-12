@@ -200,7 +200,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   @override
   void initState() {
-    // print("GG");
     super.initState();
     userEmailAddressesBox = Hive.box("userEmailAddresses");
     deviceToken = Hive.box("deviceToken");

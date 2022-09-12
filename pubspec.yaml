@@ -105,6 +105,7 @@ flutter:
   assets:
   - empty.png
   - space.jpg
+  - splashScreen.png
 # - .env_prod
   - .env_dev
 
