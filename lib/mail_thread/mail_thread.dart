@@ -294,8 +294,7 @@ class _MailThreadListState extends State<MailThreadList> {
             //-----------Mail Heading Widget
 
             Container(
-              margin:
-                  EdgeInsets.symmetric(horizontal: 4, vertical: kPadding - 14),
+              margin: EdgeInsets.symmetric(horizontal: 4, vertical: 14),
               padding: const EdgeInsets.only(top: 10, left: 12.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +311,7 @@ class _MailThreadListState extends State<MailThreadList> {
                               .toUpperCase()
                               .substring(0, 1))),
                   SizedBox(
-                    width: kPadding - 12,
+                    width: 12,
                   ),
                   Expanded(
                     flex: 1,
@@ -580,7 +579,7 @@ class _MailThreadListState extends State<MailThreadList> {
               ),
             ),
             SizedBox(
-              height: kPadding - 10,
+              height: 10,
             ),
             _details(),
             SizedBox(

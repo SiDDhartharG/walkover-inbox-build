@@ -9,7 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
-
+.env_dev
 # IntelliJ red
 *.iml
 *.ipr
