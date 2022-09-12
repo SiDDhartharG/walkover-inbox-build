@@ -257,7 +257,12 @@ class ComposeScreenState extends State<ComposeScreen>
         "from": widget.emailAddress.id,
         "cc": ccEmailIds,
         "bcc": bccEmailIds,
-        "body": {"data": _bodyController.value.text, "type": "text/html"},
+        "body": {
+          "data": _bodyController.value.text != ""
+              ? _bodyController.value.text
+              : "(no body)",
+          "type": "text/html"
+        },
         "subject": _subjectController.value.text != ""
             ? _subjectController.value.text
             : "(no subject)",
@@ -589,7 +594,7 @@ class ComposeScreenState extends State<ComposeScreen>
           },
         ),
         title: const Text(
-          "Save",
+          "New Mail",
           style: TextStyle(color: AppColor.colorComposeIcons),
         ),
         actions: [
@@ -631,11 +636,8 @@ class ComposeScreenState extends State<ComposeScreen>
             controller: _subjectController,
             maxLines: null,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(
-                  top: kPadding - 7,
-                  left: kPadding - 10,
-                  right: kPadding - 10,
-                  bottom: kPadding - 7),
+              contentPadding:
+                  EdgeInsets.only(top: 7, left: 10, right: 10, bottom: 7),
               hintText: 'Subject',
             ),
           ),
@@ -646,10 +648,7 @@ class ComposeScreenState extends State<ComposeScreen>
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(
-                    top: kPadding - 10,
-                    left: kPadding - 10,
-                    right: kPadding - 10),
+                contentPadding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 hintText: 'Compose mail',
                 enabledBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
