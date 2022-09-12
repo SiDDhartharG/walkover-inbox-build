@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OnRedirect extends StatefulWidget {
-  const OnRedirect({Key? key}) : super(key: key);
+  const OnRedirect({Key key}) : super(key: key);
 
   @override
   State<OnRedirect> createState() => _OnRedirectState();

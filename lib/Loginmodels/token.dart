@@ -6,8 +6,8 @@ part 'token.g.dart';
 class Token {
   Token();
 
-  late String accessToken;
-  
-  factory Token.fromJson(Map<String,dynamic> json) => _$TokenFromJson(json);
+  String accessToken;
+
+  factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
   Map<String, dynamic> toJson() => _$TokenToJson(this);
 }

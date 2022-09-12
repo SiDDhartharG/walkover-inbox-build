@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:inbox_flutter_app/constants/styling.dart';
+import 'package:inbox/constants/styling.dart';
 
 class SnoozeCommonModel extends StatefulWidget {
   final String selectedMailId;
   dynamic updateCurrentTag;
   SnoozeCommonModel({
-    Key? key,
-    required this.selectedMailId,
-    required this.updateCurrentTag,
+    Key key,
+    this.selectedMailId,
+    this.updateCurrentTag,
   }) : super(key: key);
   @override
   _SnoozeCommonModelState createState() => _SnoozeCommonModelState();
@@ -21,8 +21,8 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
     "Three day",
   ];
   var tagLength = 4;
-  late DateTime pickedDate;
-  late TimeOfDay pickedTime;
+  DateTime pickedDate;
+  TimeOfDay pickedTime;
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
   }
 
   selectDate() async {
-    DateTime? selectedDate = await showDatePicker(
+    DateTime selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now().add(const Duration(seconds: 1)),
       firstDate: DateTime.now(),
@@ -47,16 +47,16 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
     }
   }
 
-  selectTime([DateTime? selectedDate, String? otherValue]) async {
+  selectTime([DateTime selectedDate, String otherValue]) async {
     if (otherValue == null) {
-      TimeOfDay? selectedTime = await showTimePicker(
+      TimeOfDay selectedTime = await showTimePicker(
         context: context,
         initialTime: pickedTime,
       );
       if (selectedTime != null) {
         setState(() {
           pickedTime = selectedTime;
-          String selectedDateAndTime = selectedDate!
+          String selectedDateAndTime = selectedDate
               .toIso8601String()
               .replaceFirst(
                   'T00:00', 'T${selectedTime.toString().substring(10, 15)}');

@@ -3,6 +3,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:inbox/api/api.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox/constants/utils.dart';
+import 'package:inbox/mail_thread/mail_thread.dart';
+import 'package:inbox/widget/slidable_widget.dart';
+import 'package:inbox/widget/snoozedCommonModel.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 //import 'package:loadmore/loadmore.dart';
 
@@ -10,15 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox_flutter_app/api/api.dart';
-import 'package:inbox_flutter_app/apiModel/data.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/app_colors.dart';
-import 'package:inbox_flutter_app/mail_thread/mail_thread.dart';
-import 'package:inbox_flutter_app/constants/utils.dart';
-import 'package:inbox_flutter_app/widget/slidable_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:inbox_flutter_app/widget/snoozedCommonModel.dart';
 
 import 'dashboard.dart';
 
@@ -30,17 +29,17 @@ class MailListPage extends StatefulWidget {
   String currentUserName;
   bool isLoading;
   String userEmailAddressId;
-  Email_address? emailAddress;
+  Email_address emailAddress;
   MailListPage({
-    Key? key,
+    Key key,
     this.currentTag,
-    required this.mailToSkip,
-    required this.notifyParent,
-    required this.isLoading,
-    required this.fetchedMails,
-    required this.userEmailAddressId,
-    required this.currentUserName,
-    required this.emailAddress,
+    this.mailToSkip,
+    this.notifyParent,
+    this.isLoading,
+    this.fetchedMails,
+    this.userEmailAddressId,
+    this.currentUserName,
+    this.emailAddress,
   }) : super(key: key);
 
   @override
@@ -99,9 +98,9 @@ class _MailListPageState extends State<MailListPage> {
   // int _selectedItem = 0;
   bool _searchVisibility = false;
   int unReadCount = 8;
-  late Box<String> activeOrgIdBox;
-  late Box<String> activeUserIdBox;
-  String? activeUserId;
+  Box<String> activeOrgIdBox;
+  Box<String> activeUserIdBox;
+  String activeUserId;
 
   @override
   void initState() {
@@ -119,12 +118,12 @@ class _MailListPageState extends State<MailListPage> {
       if (query == '') {
         return [];
       }
-      String? activeOrgId = activeOrgIdBox.get("orgId");
+      String activeOrgId = activeOrgIdBox.get("orgId");
       setState(() {
         isSuggestionLoading = true;
       });
       final Map<String, dynamic> response = await APICalls.searchMailDelveUrl(
-          query, widget.emailAddress!.email.toString(), activeOrgId);
+          query, widget.emailAddress.email.toString(), activeOrgId);
       setState(() {
         isSuggestionLoading = false;
       });
@@ -194,7 +193,6 @@ class _MailListPageState extends State<MailListPage> {
 
   @override
   Widget build(BuildContext context) {
-    mySize = MediaQuery.of(context).size.height;
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -469,7 +467,7 @@ class _MailListPageState extends State<MailListPage> {
 
 //showing mail in this widget-----------------------------------//
 class ShowMailsList extends StatelessWidget {
-  ShowMailsList({Key? key, required this.selectedMail}) : super(key: key);
+  ShowMailsList({Key key, this.selectedMail}) : super(key: key);
 
   AllMailModel selectedMail;
   @override
@@ -493,25 +491,25 @@ class ShowMailsList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CircleAvatar(
-                    child: selectedMail.mail!.from!.name != null
-                        ? Text(selectedMail.mail!.from!.name
+                    child: selectedMail.mail.from.name != null
+                        ? Text(selectedMail.mail.from.name
                                     .toString()
                                     .split(" ")
                                     .length >
                                 1
-                            ? selectedMail.mail!.from!.name
+                            ? selectedMail.mail.from.name
                                     .toString()
                                     .split(" ")[0][0]
                                     .toUpperCase() +
-                                selectedMail.mail!.from!.name
+                                selectedMail.mail.from.name
                                     .toString()
                                     .split(" ")[1][0]
                                     .toUpperCase()
-                            : selectedMail.mail!.from!.name
+                            : selectedMail.mail.from.name
                                 .toString()
                                 .toUpperCase()
                                 .substring(0, 2))
-                        : Text(selectedMail.mail!.from!.address
+                        : Text(selectedMail.mail.from.address
                             .toString()
                             .toUpperCase()
                             .substring(0,
@@ -530,9 +528,9 @@ class ShowMailsList extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              selectedMail.mail!.from!.name != null
-                                  ? selectedMail.mail!.from!.name.toString()
-                                  : selectedMail.mail!.from!.address.toString(),
+                              selectedMail.mail.from.name != null
+                                  ? selectedMail.mail.from.name.toString()
+                                  : selectedMail.mail.from.address.toString(),
                               style: TextStyle(
                                 color: AppColor.colorMailListMailName,
                                 fontSize: 15,
@@ -544,7 +542,7 @@ class ShowMailsList extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                selectedMail.mail!.attachments!.isEmpty
+                                selectedMail.mail.attachments.isEmpty
                                     ? Container()
                                     : Container(
                                         child: Icon(Icons.attach_file_rounded),
@@ -565,7 +563,7 @@ class ShowMailsList extends StatelessWidget {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                selectedMail.mail!.subject.toString(),
+                                selectedMail.mail.subject.toString(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -579,15 +577,15 @@ class ShowMailsList extends StatelessWidget {
                             ),
                             (DateTime.now().day ==
                                     DateFormat("yyyy-MM-dd")
-                                        .parse(selectedMail.mail!.createdAt
+                                        .parse(selectedMail.mail.createdAt
                                             .toString())
                                         .day)
                                 ? Text(
-                                    // selectedMail.mail!.createdAt.toString(),
+                                    // selectedMail.mail.createdAt.toString(),
                                     // 2022-01-05T11:58:39.462Z
                                     DateFormat.jm()
                                         .format(DateTime.parse(selectedMail
-                                                .mail!.createdAt
+                                                .mail.createdAt
                                                 .toString())
                                             .toLocal())
                                         .toString(),
@@ -604,7 +602,7 @@ class ShowMailsList extends StatelessWidget {
 
                                     DateFormat('d MMM, yyyy').format(
                                         DateFormat("yyyy-MM-dd").parse(
-                                            selectedMail.mail!.createdAt!
+                                            selectedMail.mail.createdAt
                                                 .toString())),
                                     style: TextStyle(
                                       fontSize: 13,
@@ -616,9 +614,9 @@ class ShowMailsList extends StatelessWidget {
                           ],
                         ),
                       ),
-                      selectedMail.mail!.body!.data.toString() != '<p></p>'
+                      selectedMail.mail.body.data.toString() != '<p></p>'
                           ? Html(
-                              data: selectedMail.mail!.body!.data.toString(),
+                              data: selectedMail.mail.body.data.toString(),
                               // data: '<h5>this is an awesome test</h5>',
                               style: {
                                 '#': Style(

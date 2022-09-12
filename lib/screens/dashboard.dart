@@ -6,22 +6,22 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox_flutter_app/api/api.dart';
-import 'package:inbox_flutter_app/constants/app_colors.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/network_url.dart';
-import 'package:inbox_flutter_app/constants/styling.dart';
-import 'package:inbox_flutter_app/constants/utils.dart';
-import 'package:inbox_flutter_app/screens/home_page.dart';
-import 'package:inbox_flutter_app/screens/org_list.dart';
-import 'package:inbox_flutter_app/utils/logout.dart';
+import 'package:inbox/api/api.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox/constants/network_url.dart';
+import 'package:inbox/constants/styling.dart';
+import 'package:inbox/constants/utils.dart';
+import 'package:inbox/screens/home_page.dart';
+import 'package:inbox/screens/org_list.dart';
+import 'package:inbox/utils/logout.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 enum Menu { itemOrgList, itemLogout }
 
 class DashBoardPage extends StatefulWidget {
-  String? userToken;
-  DashBoardPage({Key? key, this.userToken}) : super(key: key);
+  String userToken;
+  DashBoardPage({Key key, this.userToken}) : super(key: key);
 
   @override
   State<DashBoardPage> createState() => _DashBoardPageState();
@@ -29,20 +29,19 @@ class DashBoardPage extends StatefulWidget {
 
 class _DashBoardPageState extends State<DashBoardPage> {
   var tagLength = <int>[];
-  String _selectedMenu = '';
 
   String url1 = NetworkUrl.defaultUserEmailAddress;
-  UserEmailAddressModel? myUserEmailAddress;
+  UserEmailAddressModel myUserEmailAddress;
   // bool isAllUserEmailAddressFetched = false;
   bool isAllUserEmailAddressFetched = true;
-  String? clickedUserEmailAddressId;
+  String clickedUserEmailAddressId;
   dynamic selectOrg;
 
-  late Box<Map<dynamic, dynamic>> allMailBox;
-  late Box<String> deviceToken;
-  late Box<UserEmailAddressModel> userEmailAddressesBox;
-  late Box<String> activeOrgIdBox;
-  late Box<String> activeUserIdBox;
+  Box<Map<dynamic, dynamic>> allMailBox;
+  Box<String> deviceToken;
+  Box<UserEmailAddressModel> userEmailAddressesBox;
+  Box<String> activeOrgIdBox;
+  Box<String> activeUserIdBox;
 
   List<String> tags = [
     "ALL",
@@ -68,8 +67,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
       setState(() {
         // isAllUserEmailAddressFetched = true;
         myUserEmailAddress = myLocalUserEmailAddress;
-        tagLength = List.generate(
-            myUserEmailAddress!.userEmailAddress!.length, (i) => 3);
+        tagLength =
+            List.generate(myUserEmailAddress.userEmailAddress.length, (i) => 3);
       });
     }
   }
@@ -94,7 +93,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   void fetchAllUserEmailAddress() async {
     try {
-      String? activeOrgId = activeOrgIdBox.get("orgId");
+      String activeOrgId = activeOrgIdBox.get("orgId");
       dynamic activeUserId = activeUserIdBox.get("activeUserId");
 
       final Map<String, dynamic> parsed =
@@ -109,9 +108,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
         UserEmailAddressModel mydefaultUserEmailAddresses =
             UserEmailAddressModel.fromJson(parsed1);
         List<UserEmailAddress> myUserEmailAddress1 =
-            myUserEmailAddresses.userEmailAddress! +
-                mydefaultUserEmailAddresses.userEmailAddress!;
-        List<UnreadCount>? unreadCount = myUserEmailAddresses.unreadCount;
+            myUserEmailAddresses.userEmailAddress +
+                mydefaultUserEmailAddresses.userEmailAddress;
+        List<UnreadCount> unreadCount = myUserEmailAddresses.unreadCount;
         UserEmailAddressModel finalUserEmailAddresses = UserEmailAddressModel(
             userEmailAddress: myUserEmailAddress1, unreadCount: unreadCount);
         userEmailAddressesBox.put("userEmailAddrress", finalUserEmailAddresses);
@@ -120,14 +119,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
             // isAllUserEmailAddressFetched = true;
             myUserEmailAddress = finalUserEmailAddresses;
             tagLength = List.generate(
-                myUserEmailAddress!.userEmailAddress!.length, (i) => 3);
+                myUserEmailAddress.userEmailAddress.length, (i) => 3);
           });
           List<String> userEmailAddressIdList = [];
           List<int> mailSkip = [];
           for (int i = 0; i < tagLength.length; i++) {
             mailSkip.add(0);
-            userEmailAddressIdList.add(myUserEmailAddress!
-                .userEmailAddress![i].emailAddressId
+            userEmailAddressIdList.add(myUserEmailAddress
+                .userEmailAddress[i].emailAddressId
                 .toString());
           }
           await updateAllEmailOfUserEmailAddressId(
@@ -138,8 +137,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
       }
 
       setState(() {
-        tagLength = List.generate(
-            myUserEmailAddress!.userEmailAddress!.length, (i) => 3);
+        tagLength =
+            List.generate(myUserEmailAddress.userEmailAddress.length, (i) => 3);
       });
     } catch (err) {
       log(err.toString());
@@ -162,13 +161,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
       ),
       leading: const Icon(Icons.notifications),
       subtitle: GestureDetector(
-        child: Text("Click To Reload"),
+        child: const Text("Click To Reload"),
         onTap: () {
           fetchAllUserEmailAddress();
         },
       ),
       background: Colors.black,
       duration: const Duration(seconds: 5),
+      // ignore: deprecated_member_use
       slideDismiss: true,
     );
   }
@@ -185,8 +185,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
     var generalNotificationDetails =
         NotificationDetails(android: androidDetails, iOS: iosDetails);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
       if (notification != null && android != null) {
         fltNotification.show(notification.hashCode, notification.title,
             notification.body, generalNotificationDetails);
@@ -217,7 +217,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
       Map<dynamic, dynamic> emailListTagWise =
           allMailBox.get(userEmailAddressId) as Map<dynamic, dynamic>;
       int result = getCountOfStatusFromMallMailModelList(
-          "UNREAD", emailListTagWise[tag]!);
+          "UNREAD", emailListTagWise[tag]);
       if (result == 0) return "";
       return result.toString();
     } catch (e) {
@@ -230,7 +230,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
       Map<dynamic, dynamic> emailListTagWise =
           allMailBox.get(userEmailAddressId) as Map<dynamic, dynamic>;
       if (emailListTagWise[tag] == null) return "";
-      int result = emailListTagWise[tag]!.length;
+      int result = emailListTagWise[tag].length;
       if (result == 0) return "";
       if (result > 50) return "50+";
       return result.toString();
@@ -243,8 +243,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     String unCountEmails = "";
     if (tagLength.elementAt(index) > tagIndex) {
       unCountEmails = getUnreadCount(
-          myUserEmailAddress!.userEmailAddress![index].emailAddressId
-              .toString(),
+          myUserEmailAddress.userEmailAddress[index].emailAddressId.toString(),
           tags[tagIndex]);
     }
     return Row(children: [
@@ -256,8 +255,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 : "Less",
         style: tagLength.elementAt(index) > tagIndex
             ? const TextStyle(
-              fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(0, 0, 0, 1), fontSize: 16)
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(0, 0, 0, 1),
+                fontSize: 16)
             : Styling.textSize20Blue,
       ),
       const SizedBox(
@@ -368,7 +368,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ? SingleChildScrollView(
                     child: Column(
                         children: List<Widget>.generate(
-                            myUserEmailAddress!.userEmailAddress!.length,
+                            myUserEmailAddress.userEmailAddress.length,
                             (int index) {
                       return Column(
                         children: [
@@ -382,8 +382,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   new Text(
-                                    myUserEmailAddress!.userEmailAddress![index]
-                                        .emailAddress!.emailName
+                                    myUserEmailAddress.userEmailAddress[index]
+                                        .emailAddress.emailName
                                         .toString(),
                                     style: const TextStyle(
                                         fontSize: 18,
@@ -434,22 +434,22 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                               ? tagLength[index] = tags.length
                                               : tagLength[index] = 3;
                                           clickedUserEmailAddressId =
-                                              myUserEmailAddress!
-                                                  .userEmailAddress![0].id;
+                                              myUserEmailAddress
+                                                  .userEmailAddress[0].id;
                                         });
                                       } else {
                                         var userEmailAddressId =
-                                            myUserEmailAddress!
-                                                .userEmailAddress![index]
+                                            myUserEmailAddress
+                                                .userEmailAddress[index]
                                                 .emailAddressId;
                                         var userEmailAddressName =
-                                            myUserEmailAddress!
-                                                .userEmailAddress![index]
-                                                .emailAddress!
+                                            myUserEmailAddress
+                                                .userEmailAddress[index]
+                                                .emailAddress
                                                 .emailName;
                                         var userCurrentTag = tags[tagIndex];
-                                        var emailAddress = myUserEmailAddress!
-                                            .userEmailAddress![index]
+                                        var emailAddress = myUserEmailAddress
+                                            .userEmailAddress[index]
                                             .emailAddress;
                                         Navigator.push(
                                           context,

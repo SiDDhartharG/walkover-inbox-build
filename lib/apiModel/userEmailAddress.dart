@@ -8,16 +8,16 @@ part 'userEmailAddress.g.dart';
 @HiveType(typeId: 0)
 class UserEmailAddressModel {
   @HiveField(0)
-  List<UserEmailAddress>? _userEmailAddress;
+  List<UserEmailAddress> _userEmailAddress;
   @HiveField(1)
-  List<UnreadCount>? _unreadCount;
+  List<UnreadCount> _unreadCount;
 
-  List<UserEmailAddress>? get userEmailAddress => _userEmailAddress;
-  List<UnreadCount>? get unreadCount => _unreadCount;
+  List<UserEmailAddress> get userEmailAddress => _userEmailAddress;
+  List<UnreadCount> get unreadCount => _unreadCount;
 
   UserEmailAddressModel(
-      {List<UserEmailAddress>? userEmailAddress,
-      List<UnreadCount>? unreadCount}) {
+      {List<UserEmailAddress> userEmailAddress,
+      List<UnreadCount> unreadCount}) {
     _userEmailAddress = userEmailAddress;
     _unreadCount = unreadCount;
   }
@@ -56,14 +56,14 @@ class UserEmailAddressModel {
 @HiveType(typeId: 1)
 class UnreadCount {
   @HiveField(0)
-  String? _mailOwner;
+  String _mailOwner;
   @HiveField(1)
-  int? _count;
+  int _count;
 
-  String? get mailOwner => _mailOwner;
-  int? get count => _count;
+  String get mailOwner => _mailOwner;
+  int get count => _count;
 
-  UnreadCount({String? mailOwner, int? count}) {
+  UnreadCount({String mailOwner, int count}) {
     _mailOwner = mailOwner;
     _count = count;
   }
@@ -97,56 +97,56 @@ class UnreadCount {
 @HiveType(typeId: 2)
 class UserEmailAddress {
   @HiveField(0)
-  String? _id;
+  String _id;
   @HiveField(1)
-  String? _userId;
+  String _userId;
   @HiveField(2)
-  String? _emailAddressId;
+  String _emailAddressId;
   @HiveField(3)
-  String? _orgId;
+  String _orgId;
   @HiveField(4)
-  String? _status;
+  String _status;
   @HiveField(5)
-  List<String>? _signature;
+  List<String> _signature;
   @HiveField(6)
-  String? _lastVisitedAt;
+  String _lastVisitedAt;
   @HiveField(7)
-  String? _addedBy;
+  String _addedBy;
   @HiveField(8)
-  String? _updatedBy;
+  String _updatedBy;
   @HiveField(9)
-  String? _createdAt;
+  String _createdAt;
   @HiveField(10)
-  String? _updatedAt;
+  String _updatedAt;
   @HiveField(11)
-  Email_address? _emailAddress;
+  Email_address _emailAddress;
 
-  String? get id => _id;
-  String? get userId => _userId;
-  String? get emailAddressId => _emailAddressId;
-  String? get orgId => _orgId;
-  String? get status => _status;
-  List<String>? get signature => _signature;
-  String? get lastVisitedAt => _lastVisitedAt;
-  String? get addedBy => _addedBy;
-  String? get updatedBy => _updatedBy;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
-  Email_address? get emailAddress => _emailAddress;
+  String get id => _id;
+  String get userId => _userId;
+  String get emailAddressId => _emailAddressId;
+  String get orgId => _orgId;
+  String get status => _status;
+  List<String> get signature => _signature;
+  String get lastVisitedAt => _lastVisitedAt;
+  String get addedBy => _addedBy;
+  String get updatedBy => _updatedBy;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
+  Email_address get emailAddress => _emailAddress;
 
   UserEmailAddress(
-      {String? id,
-      String? userId,
-      String? emailAddressId,
-      String? orgId,
-      String? status,
-      List<String>? signature,
-      String? lastVisitedAt,
-      String? addedBy,
-      String? updatedBy,
-      String? createdAt,
-      String? updatedAt,
-      Email_address? emailAddress}) {
+      {String id,
+      String userId,
+      String emailAddressId,
+      String orgId,
+      String status,
+      List<String> signature,
+      String lastVisitedAt,
+      String addedBy,
+      String updatedBy,
+      String createdAt,
+      String updatedAt,
+      Email_address emailAddress}) {
     _id = id;
     _userId = userId;
     _emailAddressId = emailAddressId;
@@ -218,68 +218,68 @@ class UserEmailAddress {
 @HiveType(typeId: 4)
 class Email_address {
   @HiveField(0)
-  List<String>? _tags;
+  List<String> _tags;
   @HiveField(1)
-  String? _email;
+  String _email;
   @HiveField(2)
-  String? _id;
+  String _id;
   @HiveField(3)
-  String? _emailName;
+  String _emailName;
   @HiveField(4)
-  String? _typeEmail;
+  String _typeEmail;
   @HiveField(5)
-  String? _orgId;
+  String _orgId;
   @HiveField(6)
-  bool? _isEnabled;
+  bool _isEnabled;
   @HiveField(7)
-  String? _createdBy;
+  String _createdBy;
   @HiveField(8)
-  String? _updatedBy;
+  String _updatedBy;
   @HiveField(9)
-  String? _domainId;
+  String _domainId;
   @HiveField(10)
-  int? _mailCount;
+  int _mailCount;
   @HiveField(11)
-  String? _createdAt;
+  String _createdAt;
   @HiveField(12)
-  String? _updatedAt;
+  String _updatedAt;
   @HiveField(13)
-  Email_domain_org? _emailDomainOrg;
+  Email_domain_org _emailDomainOrg;
   @HiveField(14)
-  List<User_email_addresses>? _userEmailAddresses;
+  List<User_email_addresses> _userEmailAddresses;
 
-  List<String>? get tags => _tags;
-  String? get email => _email;
-  String? get id => _id;
-  String? get emailName => _emailName;
-  String? get typeEmail => _typeEmail;
-  String? get orgId => _orgId;
-  bool? get isEnabled => _isEnabled;
-  String? get createdBy => _createdBy;
-  String? get updatedBy => _updatedBy;
-  String? get domainId => _domainId;
-  int? get mailCount => _mailCount;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
-  Email_domain_org? get emailDomainOrg => _emailDomainOrg;
-  List<User_email_addresses>? get userEmailAddresses => _userEmailAddresses;
+  List<String> get tags => _tags;
+  String get email => _email;
+  String get id => _id;
+  String get emailName => _emailName;
+  String get typeEmail => _typeEmail;
+  String get orgId => _orgId;
+  bool get isEnabled => _isEnabled;
+  String get createdBy => _createdBy;
+  String get updatedBy => _updatedBy;
+  String get domainId => _domainId;
+  int get mailCount => _mailCount;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
+  Email_domain_org get emailDomainOrg => _emailDomainOrg;
+  List<User_email_addresses> get userEmailAddresses => _userEmailAddresses;
 
   Email_address(
-      {List<String>? tags,
-      String? email,
-      String? id,
-      String? emailName,
-      String? typeEmail,
-      String? orgId,
-      bool? isEnabled,
-      String? createdBy,
-      String? updatedBy,
-      String? domainId,
-      int? mailCount,
-      String? createdAt,
-      String? updatedAt,
-      Email_domain_org? emailDomainOrg,
-      List<User_email_addresses>? userEmailAddresses}) {
+      {List<String> tags,
+      String email,
+      String id,
+      String emailName,
+      String typeEmail,
+      String orgId,
+      bool isEnabled,
+      String createdBy,
+      String updatedBy,
+      String domainId,
+      int mailCount,
+      String createdAt,
+      String updatedAt,
+      Email_domain_org emailDomainOrg,
+      List<User_email_addresses> userEmailAddresses}) {
     _tags = tags;
     _email = email;
     _id = id;
@@ -354,14 +354,14 @@ class Email_address {
 @HiveType(typeId: 5)
 class User_email_addresses {
   @HiveField(0)
-  String? _userId;
+  String _userId;
   @HiveField(1)
-  String? _status;
+  String _status;
 
-  String? get userId => _userId;
-  String? get status => _status;
+  String get userId => _userId;
+  String get status => _status;
 
-  User_email_addresses({String? userId, String? status}) {
+  User_email_addresses({String userId, String status}) {
     _userId = userId;
     _status = status;
   }
@@ -392,44 +392,44 @@ class User_email_addresses {
 @HiveType(typeId: 6)
 class Email_domain_org {
   @HiveField(0)
-  String? _id;
+  String _id;
   @HiveField(1)
-  String? _orgId;
+  String _orgId;
   @HiveField(2)
-  String? _domain;
+  String _domain;
   @HiveField(3)
-  String? _status;
+  String _status;
   @HiveField(4)
-  bool? _verified;
+  bool _verified;
   @HiveField(5)
-  String? _createdBy;
+  String _createdBy;
   @HiveField(6)
-  String? _updatedBy;
+  String _updatedBy;
   @HiveField(7)
-  String? _createdAt;
+  String _createdAt;
   @HiveField(8)
-  String? _updatedAt;
+  String _updatedAt;
 
-  String? get id => _id;
-  String? get orgId => _orgId;
-  String? get domain => _domain;
-  String? get status => _status;
-  bool? get verified => _verified;
-  String? get createdBy => _createdBy;
-  String? get updatedBy => _updatedBy;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
+  String get id => _id;
+  String get orgId => _orgId;
+  String get domain => _domain;
+  String get status => _status;
+  bool get verified => _verified;
+  String get createdBy => _createdBy;
+  String get updatedBy => _updatedBy;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
 
   Email_domain_org(
-      {String? id,
-      String? orgId,
-      String? domain,
-      String? status,
-      bool? verified,
-      String? createdBy,
-      String? updatedBy,
-      String? createdAt,
-      String? updatedAt}) {
+      {String id,
+      String orgId,
+      String domain,
+      String status,
+      bool verified,
+      String createdBy,
+      String updatedBy,
+      String createdAt,
+      String updatedAt}) {
     _id = id;
     _orgId = orgId;
     _domain = domain;
@@ -487,76 +487,76 @@ class Email_domain_org {
 @HiveType(typeId: 7)
 class AllMailModel {
   @HiveField(0)
-  String? _id;
+  String _id;
   @HiveField(1)
-  String? _mailOwner;
+  String _mailOwner;
   @HiveField(2)
-  String? _type;
+  String _type;
   @HiveField(3)
-  String? _mailId;
+  String _mailId;
   @HiveField(4)
   dynamic _assign;
   @HiveField(5)
-  String? _currentTag;
+  String _currentTag;
   @HiveField(6)
-  String? _status;
+  String _status;
   @HiveField(7)
   dynamic _publisherStatus;
   @HiveField(8)
-  String? _receiverStatus;
+  String _receiverStatus;
   @HiveField(9)
   dynamic _snoozeTime;
   @HiveField(10)
-  String? _updatedBy;
+  String _updatedBy;
   @HiveField(11)
-  String? _createdAt;
+  String _createdAt;
   @HiveField(12)
-  String? _updatedAt;
+  String _updatedAt;
   @HiveField(13)
-  Mail? _mail;
+  Mail _mail;
   @HiveField(14)
-  List<String>? _mailNotes;
+  List<String> _mailNotes;
 
-  set currentTag(String? value) {
+  set currentTag(String value) {
     _currentTag = value;
   }
 
-  set status(String? value) {
+  set status(String value) {
     _status = value;
   }
 
-  String? get id => _id;
-  String? get mailOwner => _mailOwner;
-  String? get type => _type;
-  String? get mailId => _mailId;
+  String get id => _id;
+  String get mailOwner => _mailOwner;
+  String get type => _type;
+  String get mailId => _mailId;
   dynamic get assign => _assign;
-  String? get currentTag => _currentTag;
-  String? get status => _status;
+  String get currentTag => _currentTag;
+  String get status => _status;
   dynamic get publisherStatus => _publisherStatus;
-  String? get receiverStatus => _receiverStatus;
+  String get receiverStatus => _receiverStatus;
   dynamic get snoozeTime => _snoozeTime;
-  String? get updatedBy => _updatedBy;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
-  Mail? get mail => _mail;
-  List<String>? get mailNotes => _mailNotes;
+  String get updatedBy => _updatedBy;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
+  Mail get mail => _mail;
+  List<String> get mailNotes => _mailNotes;
 
   AllMailModel(
-      {String? id,
-      String? mailOwner,
-      String? type,
-      String? mailId,
+      {String id,
+      String mailOwner,
+      String type,
+      String mailId,
       dynamic assign,
-      String? currentTag,
-      String? status,
+      String currentTag,
+      String status,
       dynamic publisherStatus,
-      String? receiverStatus,
+      String receiverStatus,
       dynamic snoozeTime,
-      String? updatedBy,
-      String? createdAt,
-      String? updatedAt,
-      Mail? mail,
-      List<String>? mailNotes}) {
+      String updatedBy,
+      String createdAt,
+      String updatedAt,
+      Mail mail,
+      List<String> mailNotes}) {
     _id = id;
     _mailOwner = mailOwner;
     _type = type;
@@ -636,72 +636,72 @@ class AllMailModel {
 @HiveType(typeId: 8)
 class Mail {
   @HiveField(0)
-  String? _id;
+  String _id;
   @HiveField(1)
-  List<To>? _to;
+  List<To> _to;
   @HiveField(2)
-  From? _from;
+  From _from;
   @HiveField(3)
-  List<Cc>? _cc;
+  List<Cc> _cc;
   @HiveField(4)
-  List<Bcc>? _bcc;
+  List<Bcc> _bcc;
   @HiveField(5)
-  String? _subject;
+  String _subject;
   @HiveField(6)
-  Body? _body;
+  Body _body;
   @HiveField(7)
-  String? _messageId;
+  String _messageId;
   @HiveField(8)
-  bool? _isSent;
+  bool _isSent;
   @HiveField(9)
-  String? _threadId;
+  String _threadId;
   @HiveField(10)
-  List<Attachment>? _attachments;
+  List<Attachment> _attachments;
   @HiveField(11)
-  String? _inReplyTo;
+  String _inReplyTo;
   @HiveField(12)
   dynamic _replyTo;
   @HiveField(13)
-  String? _createdBy;
+  String _createdBy;
   @HiveField(14)
-  String? _createdAt;
+  String _createdAt;
   @HiveField(15)
-  String? _updatedAt;
+  String _updatedAt;
 
-  String? get id => _id;
-  List<To>? get to => _to;
-  From? get from => _from;
-  List<Cc>? get cc => _cc;
-  List<Bcc>? get bcc => _bcc;
-  String? get subject => _subject;
-  Body? get body => _body;
-  String? get messageId => _messageId;
-  bool? get isSent => _isSent;
-  String? get threadId => _threadId;
-  List<Attachment>? get attachments => _attachments;
-  String? get inReplyTo => _inReplyTo;
+  String get id => _id;
+  List<To> get to => _to;
+  From get from => _from;
+  List<Cc> get cc => _cc;
+  List<Bcc> get bcc => _bcc;
+  String get subject => _subject;
+  Body get body => _body;
+  String get messageId => _messageId;
+  bool get isSent => _isSent;
+  String get threadId => _threadId;
+  List<Attachment> get attachments => _attachments;
+  String get inReplyTo => _inReplyTo;
   dynamic get replyTo => _replyTo;
-  String? get createdBy => _createdBy;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
+  String get createdBy => _createdBy;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
 
   Mail(
-      {String? id,
-      List<To>? to,
-      From? from,
-      List<Cc>? cc,
-      List<Bcc>? bcc,
-      String? subject,
-      Body? body,
-      String? messageId,
-      bool? isSent,
-      String? threadId,
-      List<Attachment>? attachments,
-      String? inReplyTo,
+      {String id,
+      List<To> to,
+      From from,
+      List<Cc> cc,
+      List<Bcc> bcc,
+      String subject,
+      Body body,
+      String messageId,
+      bool isSent,
+      String threadId,
+      List<Attachment> attachments,
+      String inReplyTo,
       dynamic replyTo,
-      String? createdBy,
-      String? createdAt,
-      String? updatedAt}) {
+      String createdBy,
+      String createdAt,
+      String updatedAt}) {
     _id = id;
     _to = to;
     _from = from;
@@ -725,7 +725,7 @@ class Mail {
     if (json['to'] != null) {
       _to = [];
       json['to'].forEach((v) {
-        _to?.add(To.fromJson(v));
+        _to.add(To.fromJson(v));
       });
     }
     _from = json['from'] != null ? From.fromJson(json['from']) : null;
@@ -797,14 +797,14 @@ class Mail {
 @HiveType(typeId: 9)
 class Body {
   @HiveField(0)
-  String? _data;
+  String _data;
   @HiveField(1)
-  String? _type;
+  String _type;
 
-  String? get data => _data;
-  String? get type => _type;
+  String get data => _data;
+  String get type => _type;
 
-  Body({String? data, String? type}) {
+  Body({String data, String type}) {
     _data = data;
     _type = type;
   }
@@ -827,11 +827,11 @@ class Body {
 @HiveType(typeId: 10)
 class Bcc {
   @HiveField(0)
-  String? _email;
+  String _email;
   @HiveField(1)
-  String? get email => _email;
+  String get email => _email;
 
-  Bcc({String? email}) {
+  Bcc({String email}) {
     _email = email;
   }
 
@@ -851,11 +851,11 @@ class Bcc {
 @HiveType(typeId: 11)
 class Cc {
   @HiveField(0)
-  String? _email;
+  String _email;
   @HiveField(1)
-  String? get email => _email;
+  String get email => _email;
 
-  Cc({String? email}) {
+  Cc({String email}) {
     _email = email;
   }
 
@@ -876,17 +876,17 @@ class Cc {
 @HiveType(typeId: 12)
 class From {
   @HiveField(0)
-  String? _email;
+  String _email;
   @HiveField(1)
-  String? _name;
+  String _name;
   @HiveField(2)
-  String? _address;
+  String _address;
 
-  String? get email => _email;
-  String? get name => _name;
-  String? get address => _address;
+  String get email => _email;
+  String get name => _name;
+  String get address => _address;
 
-  From({String? email, String? name, String? address}) {
+  From({String email, String name, String address}) {
     _email = email;
     _name = name;
     _address = address;
@@ -912,13 +912,13 @@ class From {
 @HiveType(typeId: 13)
 class To {
   @HiveField(0)
-  String? _email;
+  String _email;
   @HiveField(1)
-  String? _address;
-  String? get email => _email;
-  String? get address => _address;
+  String _address;
+  String get email => _email;
+  String get address => _address;
 
-  To({String? email, String? address}) {
+  To({String email, String address}) {
     _email = email;
     _address = address;
   }
@@ -939,11 +939,11 @@ class To {
 @HiveType(typeId: 14)
 class Attachment {
   @HiveField(0)
-  String? _fileName;
+  String _fileName;
   @HiveField(1)
-  String? _filePath;
+  String _filePath;
 
-  Attachment({String? fileName, String? filePath}) {
+  Attachment({String fileName, String filePath}) {
     _fileName = fileName;
     _filePath = filePath;
   }

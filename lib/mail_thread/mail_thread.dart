@@ -4,23 +4,20 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_filereader/filereader.dart';
-//import 'package:flutter_filereader/flutter_filereader.dart';
+
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox_flutter_app/api/api.dart';
-import 'package:inbox_flutter_app/apiModel/data.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/app_colors.dart';
-import 'package:inbox_flutter_app/constants/styling.dart';
-import 'package:inbox_flutter_app/constants/utils.dart';
-import 'package:inbox_flutter_app/widget/snoozedCommonModel.dart';
+import 'package:inbox/api/api.dart';
+import 'package:inbox/apiModel/data.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox/constants/styling.dart';
+import 'package:inbox/constants/utils.dart';
+import 'package:inbox/screens/compose_mail.dart';
+import 'package:inbox/widget/sheet_content.dart';
+import 'package:inbox/widget/snoozedCommonModel.dart';
 import 'package:intl/intl.dart';
-import 'package:inbox_flutter_app/screens/compose_mail.dart';
-import 'package:inbox_flutter_app/widget/sheet_content.dart';
-import 'package:mime/mime.dart';
 import 'package:universal_io/io.dart';
-//import 'package:universal_io/io.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,19 +33,19 @@ class MailThreadList extends StatefulWidget {
   ];
   AllMailModel mailItem;
   String currentUserName;
-  Email_address? emailAddress;
+  Email_address emailAddress;
   String userEmailAddressId;
   final Function() notifyParent;
   int mailToSkip;
 
   MailThreadList({
-    Key? key,
-    required this.mailToSkip,
-    required this.notifyParent,
-    required this.mailItem,
-    required this.currentUserName,
+    Key key,
+    this.mailToSkip,
+    this.notifyParent,
+    this.mailItem,
+    this.currentUserName,
     this.emailAddress,
-    required this.userEmailAddressId,
+    this.userEmailAddressId,
   }) : super(key: key);
   @override
   _MailThreadListState createState() => _MailThreadListState();
@@ -60,7 +57,7 @@ class _MailThreadListState extends State<MailThreadList> {
   bool showDrop = false;
   bool showDropCC = false;
   bool showDropBCC = false;
-  late List<Attachment> attachmentsList;
+  List<Attachment> attachmentsList;
   @override
   void initState() {
     super.initState();
@@ -68,7 +65,7 @@ class _MailThreadListState extends State<MailThreadList> {
     if (widget.mailItem.status == 'UNREAD') {
       const model = {"status": 'READ'};
       changeMailStatusReadOrUnread(
-          widget.mailItem.id!, widget.userEmailAddressId, "READ");
+          widget.mailItem.id, widget.userEmailAddressId, "READ");
       changeMailsCurrentTag(widget.mailItem.id.toString(), model,
           isUnread: true);
     }
@@ -88,7 +85,7 @@ class _MailThreadListState extends State<MailThreadList> {
   }
 
   String abc() {
-    String? s = widget.mailItem.mail!.body?.data;
+    String s = widget.mailItem.mail.body?.data;
     return s.toString();
   }
 
@@ -117,17 +114,17 @@ class _MailThreadListState extends State<MailThreadList> {
         "toastMessage": "Moved to DELETE SuccessFully",
       };
     }
-    changeMailsCurrentTag(widget.mailItem.id!, model);
+    changeMailsCurrentTag(widget.mailItem.id, model);
   }
 
   bool opened = true;
   String fromMail() {
-    String? s = widget.mailItem.mail!.from!.email.toString();
+    String s = widget.mailItem.mail.from.email.toString();
     return s;
   }
 
   Mail mail() {
-    Mail? ss = widget.mailItem.mail!;
+    Mail ss = widget.mailItem.mail;
     return ss;
   }
 
@@ -272,7 +269,7 @@ class _MailThreadListState extends State<MailThreadList> {
                                   top: 0, right: 6, bottom: 10, left: 6),
                               // width: MySize - 10,
                               child: Text(
-                                widget.mailItem.mail!.subject.toString(),
+                                widget.mailItem.mail.subject.toString(),
                                 style: const TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.normal,
@@ -305,12 +302,12 @@ class _MailThreadListState extends State<MailThreadList> {
                 children: [
                   CircleAvatar(
                       radius: 18,
-                      child: widget.mailItem.mail!.from!.email != null
-                          ? Text(widget.mailItem.mail!.from!.email
+                      child: widget.mailItem.mail.from.email != null
+                          ? Text(widget.mailItem.mail.from.email
                               .toString()
                               .toUpperCase()
                               .substring(0, 1))
-                          : Text(widget.mailItem.mail!.from!.address
+                          : Text(widget.mailItem.mail.from.address
                               .toString()
                               .toUpperCase()
                               .substring(0, 1))),
@@ -333,10 +330,10 @@ class _MailThreadListState extends State<MailThreadList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      widget.mailItem.mail!.from!.email != null
-                                          ? widget.mailItem.mail!.from!.email
+                                      widget.mailItem.mail.from.email != null
+                                          ? widget.mailItem.mail.from.email
                                               .toString()
-                                          : widget.mailItem.mail!.from!.address
+                                          : widget.mailItem.mail.from.address
                                               .toString(),
                                       style: TextStyle(
                                           fontSize: 16,
@@ -370,18 +367,17 @@ class _MailThreadListState extends State<MailThreadList> {
                                       children: [
                                         Flexible(
                                           child: SelectableText(
-                                            widget.mailItem.mail!.to![0]
-                                                        .email !=
+                                            widget.mailItem.mail.to[0].email !=
                                                     null
-                                                ? "To: ${widget.mailItem.mail!.to![0].email}"
-                                                : "To: ${widget.mailItem.mail!.to![0].address}",
+                                                ? "To: ${widget.mailItem.mail.to[0].email}"
+                                                : "To: ${widget.mailItem.mail.to[0].address}",
                                             // style: Styling.fontSize13,
                                           ),
                                         ),
                                         SizedBox(width: 4),
-                                        widget.mailItem.mail!.to!.length > 1
+                                        widget.mailItem.mail.to.length > 1
                                             ? Text('+ '
-                                                '${(widget.mailItem.mail!.to!.length) - 1}')
+                                                '${(widget.mailItem.mail.to.length) - 1}')
                                             : Text(''),
                                         InkWell(
                                           child: Icon(Icons.expand_more),
@@ -433,19 +429,19 @@ class _MailThreadListState extends State<MailThreadList> {
                                                                         CrossAxisAlignment
                                                                             .start,
                                                                     children: [
-                                                                      mail().from!.name !=
+                                                                      mail().from.name !=
                                                                               null
                                                                           ? SelectableText(
-                                                                              "${mail().from!.name.toString().toUpperCase()}\n<${mail().from!.email!.toString()}>")
+                                                                              "${mail().from.name.toString().toUpperCase()}\n<${mail().from.email.toString()}>")
                                                                           : SelectableText(
-                                                                              "${mail().from!.email!.toString()}"),
+                                                                              "${mail().from.email.toString()}"),
                                                                     ],
                                                                   )),
                                                             ],
                                                           ),
                                                           // makewidget('To'),
                                                           createList(
-                                                              mail().to!, 'To'),
+                                                              mail().to, 'To'),
                                                           Row(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -501,9 +497,8 @@ class _MailThreadListState extends State<MailThreadList> {
                                                           ),
                                                           // makewidget('CC'),
                                                           createList(
-                                                              mail().cc!, 'CC'),
-                                                          createList(
-                                                              mail().bcc!,
+                                                              mail().cc, 'CC'),
+                                                          createList(mail().bcc,
                                                               'BCC'),
                                                           Row(
                                                             crossAxisAlignment:
@@ -558,7 +553,7 @@ class _MailThreadListState extends State<MailThreadList> {
                                     if (widget.mailItem.status == 'READ') {
                                       const model = {"status": 'UNREAD'};
                                       changeMailStatusReadOrUnread(
-                                          widget.mailItem.id!,
+                                          widget.mailItem.id,
                                           widget.userEmailAddressId,
                                           "UNREAD");
                                       changeMailsCurrentTag(
@@ -614,20 +609,20 @@ class _MailThreadListState extends State<MailThreadList> {
             SizedBox(
               height: kPadding + 100,
             ),
-            ...?widget.mailItem.mail?.attachments!.map((attachmentObject) {
+            ...?widget.mailItem.mail?.attachments.map((attachmentObject) {
               return InkWell(
                   child: Text(
-                    attachmentObject.toJson()["fileName"]!,
+                    attachmentObject.toJson()["fileName"],
                     textAlign: TextAlign.left,
                   ),
                   onTap: () {
                     if (Platform.isWindows || Platform.isMacOS) {
                       _launchURL(
-                          Uri.parse(attachmentObject.toJson()["filePath"]!));
+                          Uri.parse(attachmentObject.toJson()["filePath"]));
                     } else {
                       downloadFile(
-                          Uri.parse(attachmentObject.toJson()["filePath"]!),
-                          attachmentObject.toJson()["fileName"]!);
+                          Uri.parse(attachmentObject.toJson()["filePath"]),
+                          attachmentObject.toJson()["fileName"]);
                     }
                   });
             }).toList(),
@@ -660,7 +655,7 @@ class _MailThreadListState extends State<MailThreadList> {
                   };
                 }
 
-                changeMailsCurrentTag(widget.mailItem.id!, model);
+                changeMailsCurrentTag(widget.mailItem.id, model);
               },
               child: Text(
                 widget.mailItem.currentTag == 'CLOSED' ? "Open" : 'Done',
@@ -876,7 +871,7 @@ class _MailThreadListState extends State<MailThreadList> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mailItem.mail!.to!.map((e) {
+                              children: widget.mailItem.mail.to.map((e) {
                                 var temp = Text("  ${e.email}");
                                 return temp;
                               }).toList()),
@@ -898,7 +893,7 @@ class _MailThreadListState extends State<MailThreadList> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mailItem.mail!.cc!.map((e) {
+                              children: widget.mailItem.mail.cc.map((e) {
                                 var temp = Text("  ${e.email}");
                                 return temp;
                               }).toList()),
@@ -920,7 +915,7 @@ class _MailThreadListState extends State<MailThreadList> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mailItem.mail!.bcc!.map((e) {
+                              children: widget.mailItem.mail.bcc.map((e) {
                                 var temp = Text("  ${e.email}");
                                 return temp;
                               }).toList()),

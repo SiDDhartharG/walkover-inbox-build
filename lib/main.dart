@@ -1,22 +1,20 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/network_url.dart';
-import 'package:inbox_flutter_app/screens/dashboard.dart';
-import 'package:inbox_flutter_app/screens/login.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/network_url.dart';
+import 'package:inbox/screens/dashboard.dart';
+import 'package:inbox/screens/login.dart';
 import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:inbox_flutter_app/screens/on_redirect.dart';
 
 //List<Box> boxList = [];
 Future _openBox() async {
@@ -106,15 +104,15 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late Box<String> currentTokenBox;
-  late Box<String> activeOrgIdBox;
+  Box<String> currentTokenBox;
+  Box<String> activeOrgIdBox;
   @override
   void initState() {
     currentTokenBox = Hive.box("accessToken");
@@ -122,7 +120,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  Future<Route?> checkIfLoginAndSetToken(Uri uri) async {
+  Future<Route> checkIfLoginAndSetToken(Uri uri) async {
     Map<String, String> params = uri.queryParameters;
     if (uri.path.toString().contains("login")) {
       String orgId = params['org'] ?? "";
@@ -200,19 +198,19 @@ class _MyAppState extends State<MyApp> {
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late Box<String> currentTokenBox;
-  late Box<String> activeOrgIdBox;
+  Box<String> currentTokenBox;
+  Box<String> activeOrgIdBox;
   final url = NetworkUrl.publicKey;
-  String? publicKey;
+  String publicKey;
   bool isLinkPresent = false;
-  String? fetchedToken;
+  String fetchedToken;
 
   @override
   void initState() {

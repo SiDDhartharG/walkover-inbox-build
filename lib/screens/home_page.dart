@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/utils.dart';
-import 'package:inbox_flutter_app/widget/tags.dart';
-import 'package:inbox_flutter_app/screens/mail-list.dart';
-import 'package:inbox_flutter_app/widget/bottomnavslider.dart';
-import 'package:inbox_flutter_app/screens/compose_mail.dart';
-import 'package:inbox_flutter_app/constants/app_colors.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox/constants/utils.dart';
+import 'package:inbox/screens/compose_mail.dart';
+import 'package:inbox/screens/mail-list.dart';
+import 'package:inbox/widget/bottomnavslider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -14,13 +13,13 @@ class HomePage extends StatefulWidget {
     this.emailAddress,
     this.selectedCurrentTag,
     this.selectedCurrentUserName,
-    Key? key,
+    Key key,
   }) : super(key: key);
 
-  String? selectedCurrentTag;
-  String? userEmailAddressId;
-  String? selectedCurrentUserName;
-  Email_address? emailAddress;
+  String selectedCurrentTag;
+  String userEmailAddressId;
+  String selectedCurrentUserName;
+  Email_address emailAddress;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   // ignore: non_constant_identifier_names
 
-  late Box<Map<dynamic, dynamic>> allMailBox;
+  Box<Map<dynamic, dynamic>> allMailBox;
   List<AllMailModel> allEmailToShow = [];
   int mailToSkip = 0;
 
@@ -58,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   void setAllEmailToShow() async {
     dynamic allEmailMapList = allMailBox.get(widget.userEmailAddressId);
     setState(() {
-      allEmailToShow = [...allEmailMapList![currentTag]];
+      allEmailToShow = [...allEmailMapList[currentTag]];
     });
   }
 
@@ -71,8 +70,8 @@ class _HomePageState extends State<HomePage> {
           notifyParent: setAllEmailToShow,
           isLoading: isLoading,
           fetchedMails: allEmailToShow,
-          userEmailAddressId: widget.userEmailAddressId!,
-          currentUserName: widget.selectedCurrentUserName!,
+          userEmailAddressId: widget.userEmailAddressId,
+          currentUserName: widget.selectedCurrentUserName,
           emailAddress: widget.emailAddress),
       bottomNavigationBar: BottomNavSlider(
           customFuction: findCurrentTag,

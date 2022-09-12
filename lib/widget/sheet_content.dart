@@ -1,15 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:inbox_flutter_app/constants/styling.dart';
+import 'package:inbox/constants/styling.dart';
 
 class SheetContent extends StatelessWidget {
   final List options;
   final selectedOption;
   const SheetContent({
-    required this.options,
+    this.options,
     this.selectedOption,
-    Key? key,
+    Key key,
   }) : super(key: key);
 
   @override

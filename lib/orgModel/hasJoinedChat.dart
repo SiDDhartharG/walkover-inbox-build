@@ -6,8 +6,9 @@ part 'hasJoinedChat.g.dart';
 class HasJoinedChat {
   HasJoinedChat();
 
-  late bool chat;
-  
-  factory HasJoinedChat.fromJson(Map<String,dynamic> json) => _$HasJoinedChatFromJson(json);
+  bool chat;
+
+  factory HasJoinedChat.fromJson(Map<String, dynamic> json) =>
+      _$HasJoinedChatFromJson(json);
   Map<String, dynamic> toJson() => _$HasJoinedChatToJson(this);
 }

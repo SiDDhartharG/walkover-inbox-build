@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SaveLocalDataBase {
-  String? mydir;
+  String mydir;
   dynamic saveData(String key, dynamic model, var data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -39,7 +39,7 @@ class SaveLocalDataBase {
   dynamic retrieve(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String? mydata = prefs.getString(key);
+    final String mydata = prefs.getString(key);
     var data = json.decode(mydata.toString());
     return data;
   }

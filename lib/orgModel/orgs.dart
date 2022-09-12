@@ -6,10 +6,10 @@ part 'orgs.g.dart';
 class Orgs {
   Orgs();
 
-  late String name;
-  late String id;
-  late bool public;
-  
-  factory Orgs.fromJson(Map<String,dynamic> json) => _$OrgsFromJson(json);
+  String name;
+  String id;
+  bool public;
+
+  factory Orgs.fromJson(Map<String, dynamic> json) => _$OrgsFromJson(json);
   Map<String, dynamic> toJson() => _$OrgsToJson(this);
 }

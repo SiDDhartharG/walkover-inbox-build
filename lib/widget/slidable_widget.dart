@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
-import 'package:inbox_flutter_app/constants/app_colors.dart';
-import 'package:inbox_flutter_app/constants/app_string.dart';
+import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox/constants/app_string.dart';
 
 enum SlidableAction { snooze, closed, open }
 
@@ -14,10 +14,10 @@ class SlidableWidget extends StatelessWidget {
   final Function(SlidableAction action) onDismissed;
 
   const SlidableWidget({
-    required this.child,
-    required this.onDismissed,
-    required this.mailObject,
-    Key? key,
+    this.child,
+    this.onDismissed,
+    this.mailObject,
+    Key key,
   }) : super(key: key);
 
   List<Widget> getRandomWidgetArray() {

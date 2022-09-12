@@ -6,13 +6,14 @@ part 'productsActivated.g.dart';
 class ProductsActivated {
   ProductsActivated();
 
-  late bool doc;
-  late bool okr;
-  late bool meet;
-  late bool inbox;
-  late bool sprint;
-  late bool channel;
-  
-  factory ProductsActivated.fromJson(Map<String,dynamic> json) => _$ProductsActivatedFromJson(json);
+  bool doc;
+  bool okr;
+  bool meet;
+  bool inbox;
+  bool sprint;
+  bool channel;
+
+  factory ProductsActivated.fromJson(Map<String, dynamic> json) =>
+      _$ProductsActivatedFromJson(json);
   Map<String, dynamic> toJson() => _$ProductsActivatedToJson(this);
 }
