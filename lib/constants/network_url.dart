@@ -27,9 +27,9 @@ class NetworkUrl {
   //     '$AuthUrl/?redirect_to=spaceinbox://$InboxUrl&skipURLProtocol=true';
   // static final String signOut = '$AuthUrl?action=signout';
   static final String signOut =
-      '$AuthUrl/?redirect_to=spaceinbox://inbox.intospace.io&skipURLProtocol=true';
+      '$AuthUrl/?redirect_to=spaceinbox:%2F%2Finbox.intospace.io&skipURLProtocol=true';
   static final String login =
-      '$AuthUrl/?redirect_to=spaceinbox://inbox.intospace.io&skipURLProtocol=true';
+      '$AuthUrl/?redirect_to=spaceinbox:%2F%2Finbox.intospace.io&skipURLProtocol=true';
   static final String searchMailById =
       '$BaseUrl/inbox/email-sender-receiver/:id';
   static final String deviceTokenRegistrationURL =

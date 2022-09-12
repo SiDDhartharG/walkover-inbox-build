@@ -34,9 +34,9 @@
 				<data android:scheme="http" android:host="inbox.intospace.io" />
 				<data android:scheme="https" android:host="inbox.intospace.io" />
 				-->
-				<data android:scheme="http" />
 				<data android:scheme="https" />
-				<data android:scheme="http" android:host="inbox.intospace.io" />
+				<data android:scheme="http" />
+				<data android:host="inbox.intospace.io" />
 				<data android:scheme="spaceinbox" />
 			</intent-filter>
 		</activity>
