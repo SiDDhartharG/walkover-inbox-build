@@ -17,8 +17,8 @@ class UserEmailAddressModelAdapter extends TypeAdapter<UserEmailAddressModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserEmailAddressModel()
-      .._userEmailAddress = (fields[0] as List).cast<UserEmailAddress>()
-      .._unreadCount = (fields[1] as List).cast<UnreadCount>();
+      .._userEmailAddress = (fields[0] as List?)?.cast<UserEmailAddress>()
+      .._unreadCount = (fields[1] as List?)?.cast<UnreadCount>();
   }
 
   @override
@@ -53,8 +53,8 @@ class UnreadCountAdapter extends TypeAdapter<UnreadCount> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UnreadCount()
-      .._mailOwner = fields[0] as String
-      .._count = fields[1] as int;
+      .._mailOwner = fields[0] as String?
+      .._count = fields[1] as int?;
   }
 
   @override
@@ -89,18 +89,18 @@ class UserEmailAddressAdapter extends TypeAdapter<UserEmailAddress> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserEmailAddress()
-      .._id = fields[0] as String
-      .._userId = fields[1] as String
-      .._emailAddressId = fields[2] as String
-      .._orgId = fields[3] as String
-      .._status = fields[4] as String
-      .._signature = (fields[5] as List).cast<String>()
-      .._lastVisitedAt = fields[6] as String
-      .._addedBy = fields[7] as String
-      .._updatedBy = fields[8] as String
-      .._createdAt = fields[9] as String
-      .._updatedAt = fields[10] as String
-      .._emailAddress = fields[11] as Email_address;
+      .._id = fields[0] as String?
+      .._userId = fields[1] as String?
+      .._emailAddressId = fields[2] as String?
+      .._orgId = fields[3] as String?
+      .._status = fields[4] as String?
+      .._signature = (fields[5] as List?)?.cast<String>()
+      .._lastVisitedAt = fields[6] as String?
+      .._addedBy = fields[7] as String?
+      .._updatedBy = fields[8] as String?
+      .._createdAt = fields[9] as String?
+      .._updatedAt = fields[10] as String?
+      .._emailAddress = fields[11] as Email_address?;
   }
 
   @override
@@ -155,21 +155,22 @@ class EmailaddressAdapter extends TypeAdapter<Email_address> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Email_address()
-      .._tags = (fields[0] as List).cast<String>()
-      .._email = fields[1] as String
-      .._id = fields[2] as String
-      .._emailName = fields[3] as String
-      .._typeEmail = fields[4] as String
-      .._orgId = fields[5] as String
-      .._isEnabled = fields[6] as bool
-      .._createdBy = fields[7] as String
-      .._updatedBy = fields[8] as String
-      .._domainId = fields[9] as String
-      .._mailCount = fields[10] as int
-      .._createdAt = fields[11] as String
-      .._updatedAt = fields[12] as String
-      .._emailDomainOrg = fields[13] as Email_domain_org
-      .._userEmailAddresses = (fields[14] as List).cast<User_email_addresses>();
+      .._tags = (fields[0] as List?)?.cast<String>()
+      .._email = fields[1] as String?
+      .._id = fields[2] as String?
+      .._emailName = fields[3] as String?
+      .._typeEmail = fields[4] as String?
+      .._orgId = fields[5] as String?
+      .._isEnabled = fields[6] as bool?
+      .._createdBy = fields[7] as String?
+      .._updatedBy = fields[8] as String?
+      .._domainId = fields[9] as String?
+      .._mailCount = fields[10] as int?
+      .._createdAt = fields[11] as String?
+      .._updatedAt = fields[12] as String?
+      .._emailDomainOrg = fields[13] as Email_domain_org?
+      .._userEmailAddresses =
+          (fields[14] as List?)?.cast<User_email_addresses>();
   }
 
   @override
@@ -230,8 +231,8 @@ class UseremailaddressesAdapter extends TypeAdapter<User_email_addresses> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return User_email_addresses()
-      .._userId = fields[0] as String
-      .._status = fields[1] as String;
+      .._userId = fields[0] as String?
+      .._status = fields[1] as String?;
   }
 
   @override
@@ -266,15 +267,15 @@ class EmaildomainorgAdapter extends TypeAdapter<Email_domain_org> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Email_domain_org()
-      .._id = fields[0] as String
-      .._orgId = fields[1] as String
-      .._domain = fields[2] as String
-      .._status = fields[3] as String
-      .._verified = fields[4] as bool
-      .._createdBy = fields[5] as String
-      .._updatedBy = fields[6] as String
-      .._createdAt = fields[7] as String
-      .._updatedAt = fields[8] as String;
+      .._id = fields[0] as String?
+      .._orgId = fields[1] as String?
+      .._domain = fields[2] as String?
+      .._status = fields[3] as String?
+      .._verified = fields[4] as bool?
+      .._createdBy = fields[5] as String?
+      .._updatedBy = fields[6] as String?
+      .._createdAt = fields[7] as String?
+      .._updatedAt = fields[8] as String?;
   }
 
   @override
@@ -323,21 +324,21 @@ class AllMailModelAdapter extends TypeAdapter<AllMailModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AllMailModel()
-      .._id = fields[0] as String
-      .._mailOwner = fields[1] as String
-      .._type = fields[2] as String
-      .._mailId = fields[3] as String
+      .._id = fields[0] as String?
+      .._mailOwner = fields[1] as String?
+      .._type = fields[2] as String?
+      .._mailId = fields[3] as String?
       .._assign = fields[4] as dynamic
-      .._currentTag = fields[5] as String
-      .._status = fields[6] as String
+      .._currentTag = fields[5] as String?
+      .._status = fields[6] as String?
       .._publisherStatus = fields[7] as dynamic
-      .._receiverStatus = fields[8] as String
+      .._receiverStatus = fields[8] as String?
       .._snoozeTime = fields[9] as dynamic
-      .._updatedBy = fields[10] as String
-      .._createdAt = fields[11] as String
-      .._updatedAt = fields[12] as String
-      .._mail = fields[13] as Mail
-      .._mailNotes = (fields[14] as List).cast<String>();
+      .._updatedBy = fields[10] as String?
+      .._createdAt = fields[11] as String?
+      .._updatedAt = fields[12] as String?
+      .._mail = fields[13] as Mail?
+      .._mailNotes = (fields[14] as List?)?.cast<String>();
   }
 
   @override
@@ -398,22 +399,22 @@ class MailAdapter extends TypeAdapter<Mail> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Mail()
-      .._id = fields[0] as String
-      .._to = (fields[1] as List).cast<To>()
-      .._from = fields[2] as From
-      .._cc = (fields[3] as List).cast<Cc>()
-      .._bcc = (fields[4] as List).cast<Bcc>()
-      .._subject = fields[5] as String
-      .._body = fields[6] as Body
-      .._messageId = fields[7] as String
-      .._isSent = fields[8] as bool
-      .._threadId = fields[9] as String
-      .._attachments = (fields[10] as List).cast<Attachment>()
-      .._inReplyTo = fields[11] as String
+      .._id = fields[0] as String?
+      .._to = (fields[1] as List?)?.cast<To>()
+      .._from = fields[2] as From?
+      .._cc = (fields[3] as List?)?.cast<Cc>()
+      .._bcc = (fields[4] as List?)?.cast<Bcc>()
+      .._subject = fields[5] as String?
+      .._body = fields[6] as Body?
+      .._messageId = fields[7] as String?
+      .._isSent = fields[8] as bool?
+      .._threadId = fields[9] as String?
+      .._attachments = (fields[10] as List?)?.cast<Attachment>()
+      .._inReplyTo = fields[11] as String?
       .._replyTo = fields[12] as dynamic
-      .._createdBy = fields[13] as String
-      .._createdAt = fields[14] as String
-      .._updatedAt = fields[15] as String;
+      .._createdBy = fields[13] as String?
+      .._createdAt = fields[14] as String?
+      .._updatedAt = fields[15] as String?;
   }
 
   @override
@@ -476,8 +477,8 @@ class BodyAdapter extends TypeAdapter<Body> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Body()
-      .._data = fields[0] as String
-      .._type = fields[1] as String;
+      .._data = fields[0] as String?
+      .._type = fields[1] as String?;
   }
 
   @override
@@ -512,8 +513,8 @@ class BccAdapter extends TypeAdapter<Bcc> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Bcc(
-      email: fields[1] as String,
-    ).._email = fields[0] as String;
+      email: fields[1] as String?,
+    ).._email = fields[0] as String?;
   }
 
   @override
@@ -548,8 +549,8 @@ class CcAdapter extends TypeAdapter<Cc> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Cc(
-      email: fields[1] as String,
-    ).._email = fields[0] as String;
+      email: fields[1] as String?,
+    ).._email = fields[0] as String?;
   }
 
   @override
@@ -584,8 +585,8 @@ class FromAdapter extends TypeAdapter<From> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return From()
-      .._email = fields[0] as String
-      .._name = fields[1] as String;
+      .._email = fields[0] as String?
+      .._name = fields[1] as String?;
   }
 
   @override
@@ -619,7 +620,7 @@ class ToAdapter extends TypeAdapter<To> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return To().._email = fields[0] as String;
+    return To().._email = fields[0] as String?;
   }
 
   @override
@@ -652,8 +653,8 @@ class AttachmentAdapter extends TypeAdapter<Attachment> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Attachment()
-      .._fileName = fields[0] as String
-      .._filePath = fields[1] as String;
+      .._fileName = fields[0] as String?
+      .._filePath = fields[1] as String?;
   }
 
   @override

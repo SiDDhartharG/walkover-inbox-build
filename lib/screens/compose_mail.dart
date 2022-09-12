@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox_flutter_app/constants/app_colors.dart';
 // ignore_for_file: prefer_typing_uninitialized_variablesimport 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox/api/api.dart';
-import 'package:inbox/apiModel/data.dart';
-import 'package:inbox/apiModel/userEmailAddress.dart';
-import 'package:inbox/widget/sheet_content.dart';
+import 'package:inbox_flutter_app/api/api.dart';
+import 'package:inbox_flutter_app/apiModel/data.dart';
+import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
+import 'package:inbox_flutter_app/widget/sheet_content.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
@@ -16,11 +16,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ComposeScreen extends StatefulWidget {
-  AllMailModel mailItem;
+  AllMailModel? mailItem;
   String selectedOption;
-  Email_address emailAddress;
+  Email_address? emailAddress;
   ComposeScreen(
-      {Key key, this.mailItem, this.emailAddress, this.selectedOption = ""})
+      {Key? key,
+      this.mailItem,
+      required this.emailAddress,
+      this.selectedOption = ""})
       : super(key: key);
 
   @override
@@ -29,9 +32,9 @@ class ComposeScreen extends StatefulWidget {
 
 class ComposeScreenState extends State<ComposeScreen>
     with SingleTickerProviderStateMixin {
-  var to;
-  var cc;
-  var bcc;
+  late var to;
+  late var cc;
+  late var bcc;
   bool showDrop = false;
   bool iconVis = true;
 
@@ -51,14 +54,14 @@ class ComposeScreenState extends State<ComposeScreen>
     "Send and Close"
   ];
   double _distanceToField = 0;
-  TextfieldTagsController _toController;
-  TextfieldTagsController _ccController;
-  TextfieldTagsController _bccController;
+  TextfieldTagsController? _toController;
+  TextfieldTagsController? _ccController;
+  TextfieldTagsController? _bccController;
   final _subjectController = TextEditingController();
   final _bodyController = TextEditingController();
-  DateTime pickedDate;
-  TimeOfDay pickedTime;
-  Box<List<String>> emailAddressList;
+  late DateTime pickedDate;
+  late TimeOfDay pickedTime;
+  late Box<List<String>> emailAddressList;
 
   @override
   void didChangeDependencies() {
@@ -78,45 +81,45 @@ class ComposeScreenState extends State<ComposeScreen>
     pickedDate = DateTime.now();
     pickedTime = TimeOfDay.now();
     _subjectController.text = (widget.selectedOption == "Forward"
-            ? "Fwd: ${widget.mailItem.mail.subject}"
+            ? "Fwd: ${widget.mailItem!.mail!.subject}"
             : "") ??
         "";
     _bodyController.text = (widget.selectedOption == "Forward"
             ? """
         ---------- Forwarded message --------- 
-        From: ${widget.mailItem.mail.from.name} <${widget.mailItem.mail.from.email}> 
-        Date & Time: ${widget.mailItem.mail.createdAt} 
-        Subject: ${widget.mailItem.mail.subject}  
-        To: ${widget.mailItem.mail.to[0].email}   
-        \n\n\n${widget.mailItem.mail.body.data}"""
+        From: ${widget.mailItem!.mail!.from!.name} <${widget.mailItem!.mail!.from!.email}> 
+        Date & Time: ${widget.mailItem!.mail!.createdAt} 
+        Subject: ${widget.mailItem!.mail!.subject}  
+        To: ${widget.mailItem!.mail!.to![0].email}   
+        \n\n\n${widget.mailItem!.mail!.body!.data}"""
             : "") ??
         "";
     if (widget.selectedOption == "Reply") {
       Future.delayed(const Duration(milliseconds: 70), () {
-        var from = widget.mailItem.mail.from.email ??
-            widget.mailItem.mail.from.address;
-        var to = widget.mailItem.mail.to;
-        var emailAddressName = widget.emailAddress.email;
+        var from = widget.mailItem!.mail!.from!.email ??
+            widget.mailItem!.mail!.from!.address;
+        var to = widget.mailItem!.mail!.to;
+        var emailAddressName = widget.emailAddress!.email;
         var toArray =
-            List.generate(to.length, (i) => to[i].email ?? to[i].address);
+            List.generate(to!.length, (i) => to[i].email ?? to[i].address);
         if (from != emailAddressName) {
-          _toController.addTag = from.toString();
+          _toController!.addTag = from.toString();
         } else {
-          _toController.addTag = toArray[0].toString();
+          _toController!.addTag = toArray[0].toString();
         }
       });
     }
     if (widget.selectedOption == "Reply all") {
       Future.delayed(const Duration(milliseconds: 70), () {
-        var from = widget.mailItem.mail.from.email ??
-            widget.mailItem.mail.from.address;
-        var to = widget.mailItem.mail.to;
-        var cc = widget.mailItem.mail.cc;
-        var emailAddressName = widget.emailAddress.email;
+        var from = widget.mailItem!.mail!.from!.email ??
+            widget.mailItem!.mail!.from!.address;
+        var to = widget.mailItem!.mail!.to;
+        var cc = widget.mailItem!.mail!.cc;
+        var emailAddressName = widget.emailAddress!.email;
         var toArray =
-            List.generate(to.length, (i) => to[i].email ?? to[i].address);
+            List.generate(to!.length, (i) => to[i].email ?? to[i].address);
         var ccArray =
-            List.generate(cc.length, (i) => cc[i].email ?? cc[i].email);
+            List.generate(cc!.length, (i) => cc[i].email ?? cc[i].email);
         toArray.forEach((element) {
           if (element != emailAddressName)
             _toController?.addTag = element.toString();
@@ -126,7 +129,7 @@ class ComposeScreenState extends State<ComposeScreen>
             _toController?.addTag = element.toString();
         });
         if (from != emailAddressName) {
-          _toController?.addTag = from;
+          _toController?.addTag = from!;
         }
         // print(toArray.toArray[0].toString());
       });
@@ -135,9 +138,9 @@ class ComposeScreenState extends State<ComposeScreen>
 
   @override
   void dispose() {
-    _toController.dispose();
-    _ccController.dispose();
-    _bccController.dispose();
+    _toController!.dispose();
+    _ccController!.dispose();
+    _bccController!.dispose();
     _subjectController.dispose();
     _bodyController.dispose();
     super.dispose();
@@ -161,28 +164,28 @@ class ComposeScreenState extends State<ComposeScreen>
     bool toEmailValid = (to.isNotEmpty) ? isEmail(to) : false;
     bool ccEmailValid = true;
     bool bccEmailValid = true;
-    if (iconVis) {
+    if (!iconVis) {
       cc = _ccController?.getTags;
       bcc = _bccController?.getTags;
       ccEmailValid = (cc.isNotEmpty) ? isEmail(cc) : true;
       bccEmailValid = (bcc.isNotEmpty) ? isEmail(bcc) : true;
     }
 
-    if (toEmailValid) {
+    if (!toEmailValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('To field is not valid '),
           backgroundColor: AppColor.colorSnackBarWarning,
         ),
       );
-    } else if (ccEmailValid) {
+    } else if (!ccEmailValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Cc field is not valid'),
           backgroundColor: AppColor.colorSnackBarWarning,
         ),
       );
-    } else if (bccEmailValid) {
+    } else if (!bccEmailValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Bcc field is not valid'),
@@ -225,7 +228,7 @@ class ComposeScreenState extends State<ComposeScreen>
   List<String> parentEmails = [];
 
   selectDate() async {
-    DateTime selectedDate = await showDatePicker(
+    DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now().add(const Duration(seconds: 1)),
       firstDate: DateTime.now(),
@@ -233,7 +236,7 @@ class ComposeScreenState extends State<ComposeScreen>
         DateTime.now().year + 5,
       ),
     );
-    if (selectedDate = null) {
+    if (selectedDate != null) {
       setState(() {
         pickedDate = selectedDate;
       });
@@ -247,15 +250,15 @@ class ComposeScreenState extends State<ComposeScreen>
           List.generate(to.length, (i) => {"email": to[i].trim()});
       // if expand_more not clicked ccEmailIds,bccEmailIds will be initialised with empty list
 
-      dynamic ccEmailIds = iconVis
+      dynamic ccEmailIds = !iconVis
           ? List.generate(cc.length, (i) => {"email": cc[i].trim()})
           : [];
-      dynamic bccEmailIds = iconVis
+      dynamic bccEmailIds = !iconVis
           ? List.generate(bcc.length, (i) => {"email": bcc[i].trim()})
           : [];
       dynamic model = {
         "to": toEmailIds,
-        "from": widget.emailAddress.id,
+        "from": widget.emailAddress!.id,
         "cc": ccEmailIds,
         "bcc": bccEmailIds,
         "body": {"data": _bodyController.value.text, "type": "text/html"},
@@ -293,7 +296,7 @@ class ComposeScreenState extends State<ComposeScreen>
       try {
         await APICalls.sendComposedEmail(model);
         // Navigator.pop(context);
-        if (widget.selectedOption = null) {
+        if (widget.selectedOption != null) {
           Navigator.of(context).pop();
         }
         //widget.fetchAllMails();
@@ -332,7 +335,7 @@ class ComposeScreenState extends State<ComposeScreen>
     // you can also toggle "allowMultiple" true or false depending on your need
     final result = await FilePicker.platform
         .pickFiles(allowMultiple: true, withData: true);
-    for (var fileObject in result.files) {
+    for (var fileObject in result!.files) {
       try {
         int statusCode = 500;
         final Map<String, dynamic> response =
@@ -340,7 +343,7 @@ class ComposeScreenState extends State<ComposeScreen>
         String contentType = lookupMimeType(fileObject.name) ?? "";
         statusCode = await APICalls.uploadFileInAWSWeb(
             response[response.keys.toList().first],
-            fileObject.bytes.toList(),
+            fileObject.bytes!.toList(),
             contentType);
         if (statusCode == 200) {
           // FILE UPLOAD SUCCESS
@@ -450,7 +453,7 @@ class ComposeScreenState extends State<ComposeScreen>
                     }).toList();
                     Iterable<String> listToReturn =
                         filteredListFromStoredEmail.where((email) {
-                      return _controller.getTags.contains(email);
+                      return !_controller!.getTags!.contains(email);
                     });
                     return listToReturn;
                   },
@@ -466,12 +469,12 @@ class ComposeScreenState extends State<ComposeScreen>
                       textSeparators: const [' ', ','],
                       letterCase: LetterCase.normal,
                       validator: (String tag) {
-                        if (RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        if (!RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             .hasMatch(tag)) {
                           return 'Wrong Email address';
                         }
-                        if (_controller.getTags.contains(tag)) {
+                        if (_controller!.getTags!.contains(tag)) {
                           return 'you already entered that';
                         }
                         return null;
@@ -670,17 +673,26 @@ class ComposeScreenState extends State<ComposeScreen>
                           children: [
                             Expanded(
                                 child: TextButton(
-                              child: Text(a["fileName"] ?? '',
-                                  textAlign: TextAlign.left),
+                              // style: ButtonStyle(
+                              //     backgroundColor: MaterialStatePropertyAll(
+                              //         Color.fromARGB(255, 214, 206, 206))),
+                              child: Text(
+                                a?["fileName"] ?? '',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
+                              ),
                               onPressed: () {
                                 if (kIsWeb) {
-                                  _launchURL(a["filePath"]);
+                                  _launchURL(a["filePath"]!);
                                 } else {
-                                  OpenFile.open(a["filePath"]);
+                                  OpenFile.open(a["filePath"]!);
                                 }
                               },
                             )),
                             TextButton(
+                              style: const ButtonStyle(),
                               onPressed: () {
                                 int index = attachment.indexWhere((element) {
                                   return element["filePath"] == a["filePath"];

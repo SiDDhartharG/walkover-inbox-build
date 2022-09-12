@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:inbox/constants/styling.dart';
+import 'package:inbox_flutter_app/constants/styling.dart';
 
 class SnoozeCommonModel extends StatefulWidget {
   final String selectedMailId;
   dynamic updateCurrentTag;
   SnoozeCommonModel({
-    Key key,
-    this.selectedMailId,
-    this.updateCurrentTag,
+    Key? key,
+    required this.selectedMailId,
+    required this.updateCurrentTag,
   }) : super(key: key);
   @override
   _SnoozeCommonModelState createState() => _SnoozeCommonModelState();
@@ -15,14 +15,14 @@ class SnoozeCommonModel extends StatefulWidget {
 
 class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
   List<String> snoozeOptions = [
-    "r Today",
+    "Later Today",
     "One day",
     "Two day",
     "Three day",
   ];
   var tagLength = 4;
-  DateTime pickedDate;
-  TimeOfDay pickedTime;
+  late DateTime pickedDate;
+  late TimeOfDay pickedTime;
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
   }
 
   selectDate() async {
-    DateTime selectedDate = await showDatePicker(
+    DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now().add(const Duration(seconds: 1)),
       firstDate: DateTime.now(),
@@ -47,16 +47,16 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
     }
   }
 
-  selectTime([DateTime selectedDate, String otherValue]) async {
+  selectTime([DateTime? selectedDate, String? otherValue]) async {
     if (otherValue == null) {
-      TimeOfDay selectedTime = await showTimePicker(
+      TimeOfDay? selectedTime = await showTimePicker(
         context: context,
         initialTime: pickedTime,
       );
       if (selectedTime != null) {
         setState(() {
           pickedTime = selectedTime;
-          String selectedDateAndTime = selectedDate
+          String selectedDateAndTime = selectedDate!
               .toIso8601String()
               .replaceFirst(
                   'T00:00', 'T${selectedTime.toString().substring(10, 15)}');
@@ -113,24 +113,25 @@ class _SnoozeCommonModelState extends State<SnoozeCommonModel> {
                   } else if (index != 4) {
                     final now = DateTime.now();
                     if (index == 0) {
-                      dynamic rToday = now.toIso8601String().substring(0, 10) +
-                          'T18:00:00.000';
-                      selectTime(null, rToday);
+                      dynamic laterToday =
+                          now.toIso8601String().substring(0, 10) +
+                              'T18:00:00.000';
+                      selectTime(null, laterToday);
                     } else if (index == 1) {
-                      dynamic rToday = DateTime(now.year, now.month,
+                      dynamic laterToday = DateTime(now.year, now.month,
                               now.day + 1, now.hour, now.month, now.second)
                           .toIso8601String();
-                      selectTime(null, rToday);
+                      selectTime(null, laterToday);
                     } else if (index == 2) {
-                      dynamic rToday = DateTime(now.year, now.month,
+                      dynamic laterToday = DateTime(now.year, now.month,
                               now.day + 2, now.hour, now.month, now.second)
                           .toIso8601String();
-                      selectTime(null, rToday);
+                      selectTime(null, laterToday);
                     } else if (index == 3) {
-                      dynamic rToday = DateTime(now.year, now.month,
+                      dynamic laterToday = DateTime(now.year, now.month,
                               now.day + 3, now.hour, now.month, now.second)
                           .toIso8601String();
-                      selectTime(null, rToday);
+                      selectTime(null, laterToday);
                     }
                   }
                 },

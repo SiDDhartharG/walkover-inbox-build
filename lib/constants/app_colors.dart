@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class AppColor {
   static const Color ColorRed = Color(0XFFFF0000);
-  static const Color ColorDark = Color(0XFF333333);
+  static const Color ColorDark = Color.fromARGB(255, 27, 27, 27);
   //Bottom nav bar
-  static const Color colorIconNavBar = Colors.black;
-  static const Color colorIconNavBarAction = Colors.red;
+  static const Color colorIconNavBar = Color.fromARGB(255, 0, 7, 10);
+  static const Color colorIconNavBarAction = Color.fromARGB(255, 67, 121, 191);
   //Compose
   static const Color colorComposeIcons = Colors.black54;
   static const Color colorComposeLabel = Colors.black54;
@@ -16,12 +16,13 @@ class AppColor {
 
   //Topbar
   static const Color colorTopBarIcons = Colors.white;
-  static const Color colorTopBarBackg = Color.fromARGB(255, 51, 51, 51);
+  static const Color colorTopBarBackg = Color.fromARGB(255, 0, 0, 0);
   static const Color colorSearchTextHint = Colors.white60;
-  static const Color colorSearchBoxBackg = Colors.white12;
+  static const Color colorSearchBoxBackg = Color.fromARGB(31, 10, 31, 41);
   static const Color colorModelTest = Colors.black;
   //Mail Thread
-  static const Color colorMailThredModelButtonText = Colors.blue;
+  static const Color colorMailThredModelButtonText =
+      Color.fromARGB(255, 146, 88, 205);
   static const Color colorMailThredModelIcon = Colors.black;
   static const Color colorMailThredModelBackg = Colors.white;
   static const Color colorMailThredModelText = Colors.black;
@@ -44,7 +45,7 @@ class AppColor {
   static const Color colorOrglistBackg = Color.fromARGB(255, 245, 245, 245);
   //Dashboard
   static const Color colorDashboardIcons = Colors.black38;
-  static const Color colorDashboardBackg = Color.fromARGB(255, 245, 245, 245);
+  static const Color colorDashboardBackg = Color.fromARGB(255, 233, 234, 236);
   static const Color colorDashboardListText = Colors.black;
   //Slideable
   static const Color colorSlideablLeft = Colors.blue;
@@ -54,7 +55,7 @@ class AppColor {
   static const Color colorLoginBackg = Color.fromARGB(255, 245, 245, 245);
   static const Color colorLoginButtonText = Color.fromARGB(255, 245, 245, 245);
   //Badge
-  static const Color colorBadgeBack = Colors.red;
+  static const Color colorBadgeBack = Color.fromARGB(255, 224, 75, 75);
   static const Color colorBadgeText = Colors.white;
 
   //Snack bar
@@ -64,4 +65,4 @@ class AppColor {
   static const Color colorLoadingindicator = Color.fromARGB(255, 102, 178, 239);
 }
 
-// import 'package:inbox/constants/app_colors.dart';
+// import 'package:inbox_flutter_app/constants/app_colors.dart';

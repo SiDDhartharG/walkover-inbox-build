@@ -6,9 +6,8 @@ part 'notificationkeyChat.g.dart';
 class NotificationkeyChat {
   NotificationkeyChat();
 
-  String chat;
-
-  factory NotificationkeyChat.fromJson(Map<String, dynamic> json) =>
-      _$NotificationkeyChatFromJson(json);
+  late String chat;
+  
+  factory NotificationkeyChat.fromJson(Map<String,dynamic> json) => _$NotificationkeyChatFromJson(json);
   Map<String, dynamic> toJson() => _$NotificationkeyChatToJson(this);
 }

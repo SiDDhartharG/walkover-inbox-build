@@ -2,13 +2,13 @@ class MailItem {
   String title, description, content, time, currentTag;
   bool isRead, showDateHeader;
   MailItem({
-    this.title,
-    this.currentTag,
-    this.description,
-    this.content,
-    this.isRead,
-    this.time,
-    this.showDateHeader,
+    required this.title,
+    required this.currentTag,
+    required this.description,
+    required this.content,
+    required this.isRead,
+    required this.time,
+    required this.showDateHeader,
   });
 }
 

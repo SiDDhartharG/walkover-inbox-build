@@ -1,7 +1,8 @@
+//import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox/api/api.dart';
-import 'package:inbox/apiModel/userEmailAddress.dart';
+import 'package:inbox_flutter_app/api/api.dart';
+import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
 
 class Utils {
   static void showSnackBar(BuildContext context, String message) =>
@@ -66,23 +67,23 @@ void changeMailStatusReadOrUnread(
 
   // UPDATE DATA IN VAR
 
-  int index = dataFromHive["ALL"]
+  int? index = dataFromHive["ALL"]
       ?.indexWhere((emailObjetc) => emailObjetc.id == mailId);
 
   if (index == null || index == -1) {
     return;
   }
 
-  dataFromHive["ALL"][index].status = newStatus;
+  dataFromHive["ALL"]?[index].status = newStatus;
 
-  String currentStatusOfEmail = dataFromHive["ALL"][index].currentTag;
+  String? currentStatusOfEmail = dataFromHive["ALL"]?[index].currentTag;
   if (currentStatusOfEmail != "ALL") {
     index = dataFromHive[currentStatusOfEmail]
         ?.indexWhere((emailObjetc) => emailObjetc.id == mailId);
     if (index == null || index == -1) {
       return;
     }
-    dataFromHive[currentStatusOfEmail][index].status = newStatus;
+    dataFromHive[currentStatusOfEmail]?[index].status = newStatus;
   }
 
   // UPDATE DATA IN HIVE
@@ -113,7 +114,7 @@ Future<Map<String, List<AllMailModel>>> functionToGiveAllEmailTagwise(
   } else {
     Box allMailBox = Hive.box<Map<dynamic, dynamic>>("allEmails");
     allList =
-        allMailBox.get(userEmailAddressId).cast<String, List<AllMailModel>>();
+        allMailBox.get(userEmailAddressId)!.cast<String, List<AllMailModel>>();
   }
   // ignore: unnecessary_cast
   allList = await addTagInRspectiveMap(allList, allEmailList)
@@ -134,7 +135,9 @@ Future<Map<String, List<AllMailModel>>> addTagInRspectiveMap(
           addInGivenArray(allList[emailObject.currentTag] ?? [], emailObject);
     }
 
-    if (emailObject.mail.from.email.toString().replaceAll('@okskul.com', '') ==
+    if (emailObject.mail!.from!.email
+            .toString()
+            .replaceAll('@okskul.com', '') ==
         res1['email'].toString().replaceAll("@gmail.com", '')) {
       allList["SENT"] = addInGivenArray(allList["SENT"] ?? [], emailObject);
     }
@@ -164,9 +167,9 @@ void storeAllEmailFromAllMailModelAndStoreInHive(
 }
 
 List<AllMailModel> addInGivenArray(
-    List<AllMailModel> list, AllMailModel object) {
+    List<AllMailModel>? list, AllMailModel object) {
   try {
-    List<AllMailModel> result = [];
+    List<AllMailModel>? result = [];
     if (list != null) {
       result = list.cast<AllMailModel>();
     }

@@ -1,19 +1,22 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:inbox/apiModel/userEmailAddress.dart';
-import 'package:inbox/constants/app_colors.dart';
-import 'package:inbox/constants/network_url.dart';
-import 'package:inbox/screens/dashboard.dart';
-import 'package:inbox/screens/login.dart';
+import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
+import 'package:inbox_flutter_app/constants/network_url.dart';
+import 'package:inbox_flutter_app/screens/dashboard.dart';
+import 'package:inbox_flutter_app/screens/login.dart';
 import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:inbox_flutter_app/screens/on_redirect.dart';
 
 //List<Box> boxList = [];
 Future _openBox() async {
@@ -59,13 +62,11 @@ Future<void> getPermission() async {
     provisional: false,
     sound: true,
   );
-
   print('User granted permission: ${settings.authorizationStatus}');
 }
 
 void fcmConfigs() async {
   String token;
-  print(kIsWeb);
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
@@ -82,12 +83,9 @@ void fcmConfigs() async {
                 "BPvGgCPFx2ur_sqn_YZeCCZs-hIgnyiohuqDskjay5kophTypfMwJV-MBsZEomZqtly0NXaNjA-wOTclPgf1K5A") ??
         "";
   } else {
-    print("1");
     await Firebase.initializeApp();
-    print("2");
 
     token = await FirebaseMessaging.instance.getToken() ?? "";
-    print("3");
   }
   print("token");
   print(token);
@@ -108,50 +106,119 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  late Box<String> currentTokenBox;
+  late Box<String> activeOrgIdBox;
   @override
   void initState() {
+    currentTokenBox = Hive.box("accessToken");
+    activeOrgIdBox = Hive.box("activeOrgId");
     super.initState();
+  }
+
+  Future<Route?> checkIfLoginAndSetToken(Uri uri) async {
+    Map<String, String> params = uri.queryParameters;
+    if (uri.path.toString().contains("login")) {
+      String orgId = params['org'] ?? "";
+      print(orgId);
+      String tokenId = params['token'] ?? '';
+      print(tokenId);
+      await currentTokenBox.put("currentToken", tokenId);
+      await activeOrgIdBox.put("orgId", orgId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Inbox',
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      title: 'Inbox',
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+        textTheme: GoogleFonts.latoTextTheme(
+          Theme.of(context).textTheme,
         ),
-        home: const SplashScreen());
+      ),
+      // home: const SplashScreen(),
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        // When navigating to the "/" route, build the HomeScreen widget.
+        '/': (context) => const SplashScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+      },
+      onUnknownRoute: ((settings) {
+        print("settings.name.toString()");
+        print(settings.name);
+        Uri uri = Uri.dataFromString(settings.name.toString());
+        print("uri");
+        print(uri);
+        checkIfLoginAndSetToken(uri).then((_) {
+          return MaterialPageRoute(
+            builder: (context) => DashBoardPage(),
+          );
+        }).catchError((onError) {
+          // ignore: invalid_return_type_for_catch_error
+          return null;
+        });
+      }),
+      // onGenerateRoute: ((settings) {
+      //   print(settings.name.toString());
+      //   Uri uri = Uri.dataFromString(settings.name.toString());
+      //   print("uri");
+      //   print(uri);
+      //   checkIfLoginAndSetToken(uri).then((_) {
+      //     return MaterialPageRoute(builder: (_) => DashBoardPage());
+      //   }).catchError((onError) {
+      //     // ignore: invalid_return_type_for_catch_error
+      //     return null;
+      //   });
+      // }),
+    );
   }
+
+  // Route? function(settings) {
+  //   print(settings.name.toString());
+  //   Uri uri = Uri.dataFromString(settings.name.toString());
+  //   print("uri");
+  //   print(uri);
+  //   checkIfLoginAndSetToken(uri).then((value) {
+  //     print("value");
+  //     print(value);
+  //     return MaterialPageRoute(builder: (_) => DashBoardPage());
+  //   }).catchError((onError) {
+  //     print(onError);
+  //     return null;
+  //   });
+  // }
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Box<String> currentTokenBox;
-  Box<String> activeOrgIdBox;
+  late Box<String> currentTokenBox;
+  late Box<String> activeOrgIdBox;
   final url = NetworkUrl.publicKey;
-  String publicKey;
+  String? publicKey;
   bool isLinkPresent = false;
-  String fetchedToken;
+  String? fetchedToken;
 
   @override
   void initState() {
     super.initState();
     currentTokenBox = Hive.box("accessToken");
+    activeOrgIdBox = Hive.box("activeOrgId");
     fetchPublickey();
     Timer(
         const Duration(seconds: 2),
@@ -184,10 +251,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const SpinKitFadingCube(
-      color: AppColor.colorLoadingindicator,
-      size: 60.0,
-      duration: Duration(milliseconds: 3000),
-    );
+    return AnimatedSplashScreen(
+        splash: SvgPicture.asset('splashScreen.svg'),
+        nextScreen: MyLogin(),
+        splashTransition: SplashTransition.scaleTransition);
   }
 }

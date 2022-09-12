@@ -1,13 +1,13 @@
 class UserUnreadCountModel {
-  String _mailOwner;
-  bool _count;
+  String? _mailOwner;
+  bool? _count;
 
-  String get userId => _mailOwner;
-  bool get count => _count;
+  String? get userId => _mailOwner;
+  bool? get count => _count;
 
   userEmailAddresses({
-    String mailOwner,
-    bool count,
+    String? mailOwner,
+    bool? count,
   }) {
     _mailOwner = mailOwner;
     _count = count;

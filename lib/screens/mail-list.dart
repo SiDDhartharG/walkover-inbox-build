@@ -1,21 +1,24 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, prefer_final_fields, must_be_immutable
 
+import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+//import 'package:loadmore/loadmore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox/api/api.dart';
-import 'package:inbox/apiModel/data.dart';
-import 'package:inbox/apiModel/userEmailAddress.dart';
-import 'package:inbox/constants/app_colors.dart';
-import 'package:inbox/mail_thread/mail_thread.dart';
-import 'package:inbox/constants/utils.dart';
-import 'package:inbox/widget/slidable_widget.dart';
+import 'package:inbox_flutter_app/api/api.dart';
+import 'package:inbox_flutter_app/apiModel/data.dart';
+import 'package:inbox_flutter_app/apiModel/userEmailAddress.dart';
+import 'package:inbox_flutter_app/constants/app_colors.dart';
+import 'package:inbox_flutter_app/mail_thread/mail_thread.dart';
+import 'package:inbox_flutter_app/constants/utils.dart';
+import 'package:inbox_flutter_app/widget/slidable_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:inbox/widget/snoozedCommonModel.dart';
+import 'package:inbox_flutter_app/widget/snoozedCommonModel.dart';
 
 import 'dashboard.dart';
 
@@ -27,17 +30,17 @@ class MailListPage extends StatefulWidget {
   String currentUserName;
   bool isLoading;
   String userEmailAddressId;
-  Email_address emailAddress;
+  Email_address? emailAddress;
   MailListPage({
-    Key key,
+    Key? key,
     this.currentTag,
-    this.mailToSkip,
-    this.notifyParent,
-    this.isLoading,
-    this.fetchedMails,
-    this.userEmailAddressId,
-    this.currentUserName,
-    this.emailAddress,
+    required this.mailToSkip,
+    required this.notifyParent,
+    required this.isLoading,
+    required this.fetchedMails,
+    required this.userEmailAddressId,
+    required this.currentUserName,
+    required this.emailAddress,
   }) : super(key: key);
 
   @override
@@ -50,6 +53,7 @@ class _MailListPageState extends State<MailListPage> {
       RefreshController(initialRefresh: false);
   bool isSuggestionLoading = false;
   bool isAllMailFetched = false;
+  bool isMailFetching = false;
 
   void _onRefresh() async {
     try {
@@ -64,6 +68,9 @@ class _MailListPageState extends State<MailListPage> {
 
   void _onLoading() async {
     // monitor network fetch
+    setState(() {
+      isMailFetching = true;
+    });
     try {
       Box allMailBox = Hive.box<Map<dynamic, dynamic>>("allEmails");
       dynamic allEmailObject = allMailBox.get(widget.userEmailAddressId);
@@ -71,7 +78,11 @@ class _MailListPageState extends State<MailListPage> {
       await updateAllEmailOfUserEmailAddressId(
           [widget.userEmailAddressId], [allEmailObject['ALL'].length]);
       widget.notifyParent();
+
       _refreshController.loadComplete();
+      setState(() {
+        isMailFetching = false;
+      });
       if (oldMailListLength == allEmailObject['ALL'].length) {
         setState(() {
           isAllMailFetched = true;
@@ -79,15 +90,18 @@ class _MailListPageState extends State<MailListPage> {
       }
     } catch (e) {
       _refreshController.loadFailed();
+      setState(() {
+        isMailFetching = false;
+      });
     }
   }
 
   // int _selectedItem = 0;
   bool _searchVisibility = false;
-  int unReadCount = 5;
-  Box<String> activeOrgIdBox;
-  Box<String> activeUserIdBox;
-  String activeUserId;
+  int unReadCount = 8;
+  late Box<String> activeOrgIdBox;
+  late Box<String> activeUserIdBox;
+  String? activeUserId;
 
   @override
   void initState() {
@@ -105,17 +119,17 @@ class _MailListPageState extends State<MailListPage> {
       if (query == '') {
         return [];
       }
-      String activeOrgId = activeOrgIdBox.get("orgId");
+      String? activeOrgId = activeOrgIdBox.get("orgId");
       setState(() {
         isSuggestionLoading = true;
       });
       final Map<String, dynamic> response = await APICalls.searchMailDelveUrl(
-          query, widget.emailAddress.email.toString(), activeOrgId);
+          query, widget.emailAddress!.email.toString(), activeOrgId);
       setState(() {
         isSuggestionLoading = false;
       });
       try {
-        if (response['hits']['hits'] = null) {
+        if (response['hits']['hits'] != null) {
           return response['hits']['hits'].where((suggetions) {
             Map mapValue = Map.from(suggetions);
             return mapValue["_score"].toString() != "0";
@@ -143,6 +157,8 @@ class _MailListPageState extends State<MailListPage> {
           MaterialPageRoute(
             builder: (context) {
               return MailThreadList(
+                notifyParent: widget.notifyParent,
+                mailToSkip: widget.mailToSkip,
                 mailItem: searchedMail,
                 currentUserName: widget.currentUserName,
                 emailAddress: widget.emailAddress,
@@ -165,6 +181,8 @@ class _MailListPageState extends State<MailListPage> {
       MaterialPageRoute(
         builder: (context) {
           return MailThreadList(
+              notifyParent: widget.notifyParent,
+              mailToSkip: widget.mailToSkip,
               mailItem: widget.fetchedMails[index],
               currentUserName: widget.currentUserName,
               emailAddress: widget.emailAddress,
@@ -178,155 +196,222 @@ class _MailListPageState extends State<MailListPage> {
   Widget build(BuildContext context) {
     mySize = MediaQuery.of(context).size.height;
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: _searchVisibility
-            ? Row(
-                children: [
-                  Expanded(
-                    child: IconButton(
-                      padding: EdgeInsets.only(left: 16),
-                      icon: const Icon(Icons.arrow_back_ios),
-                      iconSize: 24,
-                      color: AppColor.colorTopBarIcons,
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return DashBoardPage();
-                            },
+        key: _scaffoldKey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: !_searchVisibility
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: IconButton(
+                        padding: EdgeInsets.only(left: 16),
+                        icon: const Icon(Icons.arrow_back_ios),
+                        iconSize: 24,
+                        color: AppColor.colorTopBarIcons,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return DashBoardPage();
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : null,
+          actions: [
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _searchVisibility
+                    ? Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          color: AppColor.colorSearchBoxBackg,
+                        ),
+                        child: TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              autofocus: true,
+                              style: DefaultTextStyle.of(context)
+                                  .style
+                                  .copyWith(
+                                      fontStyle: FontStyle.italic,
+                                      color: AppColor.colorTopBarIcons),
+                              textAlignVertical: TextAlignVertical.bottom,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintStyle: TextStyle(
+                                    color: AppColor.colorSearchTextHint),
+                                hintText: 'Search here',
+                              )),
+                          suggestionsCallback: (pattern) async {
+                            return await getMailsSuggestions(pattern);
+                          },
+                          itemBuilder: (context, dynamic suggestion) {
+                            return ListTile(
+                              leading: Icon(Icons.message_rounded),
+                              title: Text(suggestion['_source']['subject']),
+                              subtitle: Text(suggestion['_source']['toEmails']
+                                              .length >
+                                          0 &&
+                                      suggestion['_source']['toEmails'][0] !=
+                                          null
+                                  ? suggestion['_source']['toEmails'][0]
+                                  : ''),
+                            );
+                          },
+                          onSuggestionSelected: (dynamic suggestion) async {
+                            searchMailById(suggestion['_id']);
+                          },
+                        ),
+                      )
+                    : Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 50.0),
+                        child: Text(
+                          widget.currentUserName,
+                          style: TextStyle(
+                            fontSize: 20.0,
                           ),
+                        ),
+                      ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                !_searchVisibility ? Icons.search : Icons.close,
+                size: 28,
+                color: AppColor.colorTopBarIcons,
+              ),
+              onPressed: () {
+                setState(() {
+                  _searchVisibility = !_searchVisibility;
+                });
+              },
+            ),
+          ],
+          elevation: 0,
+          backgroundColor: AppColor.colorTopBarBackg,
+        ),
+        body: widget.fetchedMails.length > 0
+            ? kIsWeb
+                ? ListView(children: [
+                    Expanded(
+                        child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: widget.fetchedMails.length,
+                      itemBuilder: (context, index) {
+                        if (widget.currentTag == "ALL" &&
+                            (widget.fetchedMails[index].currentTag ==
+                                    "CLOSED" ||
+                                widget.fetchedMails[index].currentTag ==
+                                    "DELETE")) {
+                          return SizedBox(
+                            height: 0,
+                          );
+                        }
+                        return ListTile(
+                          hoverColor: AppColor.colorMailListhover,
+                          // focusColor: Color.fromARGB(255, 175, 138, 28),
+                          onTap: () {
+                            onTabEmailRowClick(index);
+                          },
+                          title: SlidableWidget(
+                              child: ShowMailsList(
+                                  selectedMail: widget.fetchedMails[index]),
+                              onDismissed: (action) => dismissSlidableItem(
+                                  context,
+                                  widget.fetchedMails[index].id.toString(),
+                                  action),
+                              mailObject: widget.fetchedMails[index]),
+                        );
+                      },
+                    )),
+                    isMailFetching
+                        ? const Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.black))
+                        : isAllMailFetched
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [Text("All mail fetched")],
+                              )
+                            : GestureDetector(
+                                onTap: _onLoading,
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Click to load more"),
+                                      Icon(Icons.replay_outlined)
+                                    ],
+                                  ),
+                                ))
+                  ])
+                : SmartRefresher(
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: MaterialClassicHeader(),
+                    footer: isAllMailFetched
+                        ? ClassicFooter(
+                            idleText: "Loading Complete",
+                            idleIcon: Icon(Icons.done))
+                        : ClassicFooter(),
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
+                    controller: _refreshController,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: widget.fetchedMails.length,
+                      itemBuilder: (context, index) {
+                        if (widget.currentTag == "ALL" &&
+                            (widget.fetchedMails[index].currentTag ==
+                                    "CLOSED" ||
+                                widget.fetchedMails[index].currentTag ==
+                                    "DELETE")) {
+                          return SizedBox(
+                            height: 0,
+                          );
+                        }
+                        return ListTile(
+                          hoverColor: AppColor.colorMailListhover,
+                          // focusColor: Color.fromARGB(255, 175, 138, 28),
+                          onTap: () {
+                            onTabEmailRowClick(index);
+                          },
+                          title: SlidableWidget(
+                              child: ShowMailsList(
+                                  selectedMail: widget.fetchedMails[index]),
+                              onDismissed: (action) => dismissSlidableItem(
+                                  context,
+                                  widget.fetchedMails[index].id.toString(),
+                                  action),
+                              mailObject: widget.fetchedMails[index]),
                         );
                       },
                     ),
-                  ),
-                ],
-              )
-            : null,
-        actions: [
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _searchVisibility
-                  ? Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                        color: AppColor.colorSearchBoxBackg,
-                      ),
-                      child: TypeAheadField(
-                        textFieldConfiguration: TextFieldConfiguration(
-                            autofocus: true,
-                            style: DefaultTextStyle.of(context).style.copyWith(
-                                fontStyle: FontStyle.italic,
-                                color: AppColor.colorTopBarIcons),
-                            textAlignVertical: TextAlignVertical.bottom,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintStyle: TextStyle(
-                                  color: AppColor.colorSearchTextHint),
-                              hintText: 'Search here',
-                            )),
-                        suggestionsCallback: (pattern) async {
-                          return await getMailsSuggestions(pattern);
-                        },
-                        itemBuilder: (context, dynamic suggestion) {
-                          return ListTile(
-                            leading: Icon(Icons.message_rounded),
-                            title: Text(suggestion['_source']['subject']),
-                            subtitle: Text(
-                                suggestion['_source']['toEmails'].length > 0 &&
-                                        suggestion['_source']['toEmails'][0] !=
-                                            null
-                                    ? suggestion['_source']['toEmails'][0]
-                                    : ''),
-                          );
-                        },
-                        onSuggestionSelected: (dynamic suggestion) async {
-                          searchMailById(suggestion['_id']);
-                        },
-                      ),
-                    )
-                  : Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(left: 50.0),
-                      child: Text(
-                        widget.currentUserName,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              _searchVisibility ? Icons.search : Icons.close,
-              size: 28,
-              color: AppColor.colorTopBarIcons,
-            ),
-            onPressed: () {
-              setState(() {
-                _searchVisibility = _searchVisibility;
-              });
-            },
-          ),
-        ],
-        elevation: 0,
-        backgroundColor: AppColor.colorTopBarBackg,
-      ),
-      body: widget.fetchedMails.length > 0
-          ? SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              header: MaterialClassicHeader(),
-              footer: isAllMailFetched
-                  ? ClassicFooter(
-                      idleText: "Loading Complete", idleIcon: Icon(Icons.done))
-                  : ClassicFooter(),
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              controller: _refreshController,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-                itemCount: widget.fetchedMails.length,
-                itemBuilder: (context, index) {
-                  if (widget.currentTag == "ALL" &&
-                      widget.fetchedMails[index].currentTag == "CLOSED") {
-                    return SizedBox(
-                      height: 0,
-                    );
-                  }
-                  return ListTile(
-                    hoverColor: AppColor.colorMailListhover,
-                    // focusColor: Color.fromARGB(255, 175, 138, 28),
-                    onTap: () {
-                      onTabEmailRowClick(index);
-                    },
-                    title: SlidableWidget(
-                        child: ShowMailsList(
-                            selectedMail: widget.fetchedMails[index]),
-                        onDismissed: (action) => dismissSlidableItem(context,
-                            widget.fetchedMails[index].id.toString(), action),
-                        mailObject: widget.fetchedMails[index]),
-                  );
-                },
-              ),
-            )
-          : Center(
-              child: Image.asset(
-                "empty.png",
-                height: 250,
-                width: 250,
-              ),
-              heightFactor: 2.5,
-            ),
-    );
+                  )
+            : Center(
+                child: Image.asset(
+                  'empty1.png',
+                  height: 250,
+                  width: 250,
+                ),
+                heightFactor: 2.5,
+              ));
   }
 
-  void changeMailsCurrentTag(String mailId, dynamic model, String tag) async {
+  void changeMailsCurrentTag(String mailId, dynamic model) async {
     try {
       // await changeMailTag(mailId, widget.userEmailAddressId, tag);
       await APICalls.changeMailCurrentTagAPI(mailId, model);
@@ -366,7 +451,7 @@ class _MailListPageState extends State<MailListPage> {
           "current_tag": 'CLOSED',
           "toastMessage": "Moved to CLOSED SuccessFully",
         };
-        changeMailsCurrentTag(mailId, model, "CLOSED");
+        changeMailsCurrentTag(mailId, model);
         Utils.showSnackBar(context, 'Moved to CLOSED');
         break;
       case SlidableAction.open:
@@ -374,7 +459,7 @@ class _MailListPageState extends State<MailListPage> {
           "current_tag": 'ALL',
           "toastMessage": "Moved to OPEN SuccessFully",
         };
-        changeMailsCurrentTag(mailId, model, "ALL");
+        changeMailsCurrentTag(mailId, model);
         Utils.showSnackBar(context, 'Moved to ALL');
         break;
     }
@@ -384,7 +469,7 @@ class _MailListPageState extends State<MailListPage> {
 
 //showing mail in this widget-----------------------------------//
 class ShowMailsList extends StatelessWidget {
-  ShowMailsList({Key key, this.selectedMail}) : super(key: key);
+  ShowMailsList({Key? key, required this.selectedMail}) : super(key: key);
 
   AllMailModel selectedMail;
   @override
@@ -408,25 +493,25 @@ class ShowMailsList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CircleAvatar(
-                    child: selectedMail.mail.from.name != null
-                        ? Text(selectedMail.mail.from.name
+                    child: selectedMail.mail!.from!.name != null
+                        ? Text(selectedMail.mail!.from!.name
                                     .toString()
                                     .split(" ")
                                     .length >
                                 1
-                            ? selectedMail.mail.from.name
+                            ? selectedMail.mail!.from!.name
                                     .toString()
                                     .split(" ")[0][0]
                                     .toUpperCase() +
-                                selectedMail.mail.from.name
+                                selectedMail.mail!.from!.name
                                     .toString()
                                     .split(" ")[1][0]
                                     .toUpperCase()
-                            : selectedMail.mail.from.name
+                            : selectedMail.mail!.from!.name
                                 .toString()
                                 .toUpperCase()
                                 .substring(0, 2))
-                        : Text(selectedMail.mail.from.address
+                        : Text(selectedMail.mail!.from!.address
                             .toString()
                             .toUpperCase()
                             .substring(0,
@@ -441,17 +526,36 @@ class ShowMailsList extends StatelessWidget {
                     children: [
                       Container(
                         margin: EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          selectedMail.mail.from.name != null
-                              ? selectedMail.mail.from.name.toString()
-                              : selectedMail.mail.from.address.toString(),
-                          style: TextStyle(
-                            color: AppColor.colorMailListMailName,
-                            fontSize: 15,
-                            fontWeight: selectedMail.status == 'READ'
-                                ? FontWeight.w300
-                                : FontWeight.w800,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedMail.mail!.from!.name != null
+                                  ? selectedMail.mail!.from!.name.toString()
+                                  : selectedMail.mail!.from!.address.toString(),
+                              style: TextStyle(
+                                color: AppColor.colorMailListMailName,
+                                fontSize: 15,
+                                fontWeight: selectedMail.status == 'READ'
+                                    ? FontWeight.w300
+                                    : FontWeight.w800,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                selectedMail.mail!.attachments!.isEmpty
+                                    ? Container()
+                                    : Container(
+                                        child: Icon(Icons.attach_file_rounded),
+                                      ),
+                                // selectedMail.currentTag == "CLOSED" ?
+                                // Container(
+                                //   child:Icon(Icons.account_circle),
+                                // ):Container(),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       Container(
@@ -461,7 +565,7 @@ class ShowMailsList extends StatelessWidget {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                selectedMail.mail.subject.toString(),
+                                selectedMail.mail!.subject.toString(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -475,15 +579,15 @@ class ShowMailsList extends StatelessWidget {
                             ),
                             (DateTime.now().day ==
                                     DateFormat("yyyy-MM-dd")
-                                        .parse(selectedMail.mail.createdAt
+                                        .parse(selectedMail.mail!.createdAt
                                             .toString())
                                         .day)
                                 ? Text(
-                                    // selectedMail.mail.createdAt.toString(),
+                                    // selectedMail.mail!.createdAt.toString(),
                                     // 2022-01-05T11:58:39.462Z
                                     DateFormat.jm()
                                         .format(DateTime.parse(selectedMail
-                                                .mail.createdAt
+                                                .mail!.createdAt
                                                 .toString())
                                             .toLocal())
                                         .toString(),
@@ -495,12 +599,12 @@ class ShowMailsList extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    // selectedMail.mail.createdAt.toString(),
+                                    // selectedMail.mail!.createdAt.toString(),
                                     // 2022-01-05T11:58:39.462Z
 
                                     DateFormat('d MMM, yyyy').format(
                                         DateFormat("yyyy-MM-dd").parse(
-                                            selectedMail.mail.createdAt
+                                            selectedMail.mail!.createdAt!
                                                 .toString())),
                                     style: TextStyle(
                                       fontSize: 13,
@@ -512,9 +616,9 @@ class ShowMailsList extends StatelessWidget {
                           ],
                         ),
                       ),
-                      selectedMail.mail.body.data.toString() != '<p></p>'
+                      selectedMail.mail!.body!.data.toString() != '<p></p>'
                           ? Html(
-                              data: selectedMail.mail.body.data.toString(),
+                              data: selectedMail.mail!.body!.data.toString(),
                               // data: '<h5>this is an awesome test</h5>',
                               style: {
                                 '#': Style(

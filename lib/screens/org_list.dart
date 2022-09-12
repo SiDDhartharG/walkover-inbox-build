@@ -1,16 +1,17 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox/api/api.dart';
-import 'package:inbox/constants/app_colors.dart';
-import 'package:inbox/orgModel/orgs.dart';
-import 'package:inbox/orgModel/activeOrg.dart';
-import 'package:inbox/screens/dashboard.dart';
-import 'package:inbox/utils/logout.dart';
+import 'package:inbox_flutter_app/api/api.dart';
+import 'package:inbox_flutter_app/constants/app_colors.dart';
+import 'package:inbox_flutter_app/orgModel/orgs.dart';
+import 'package:inbox_flutter_app/orgModel/activeOrg.dart';
+import 'package:inbox_flutter_app/screens/dashboard.dart';
+import 'package:inbox_flutter_app/utils/logout.dart';
 
 class OrgList extends StatefulWidget {
-  const OrgList({Key key}) : super(key: key);
+  const OrgList({Key? key}) : super(key: key);
 
   @override
   State<OrgList> createState() => _OrgListState();
@@ -18,8 +19,8 @@ class OrgList extends StatefulWidget {
 
 class _OrgListState extends State<OrgList> {
   bool isAllActiveOrgDataFetched = false;
-  ActiveOrg myCurrentUser;
-  Box<String> activeOrgIdBox;
+  ActiveOrg? myCurrentUser;
+  late Box<String> activeOrgIdBox;
 
   @override
   void initState() {
@@ -101,13 +102,14 @@ class _OrgListState extends State<OrgList> {
                       flex: 1,
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: myCurrentUser.orgs.length,
+                        itemCount: myCurrentUser!.orgs.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              saveSelectedOrgData(myCurrentUser.orgs[index]);
+                              saveSelectedOrgData(myCurrentUser!.orgs[index]);
                             },
-                            child: ShowOrgsList(org: myCurrentUser.orgs[index]),
+                            child:
+                                ShowOrgsList(org: myCurrentUser!.orgs[index]),
                           );
                         },
                       ),
@@ -123,7 +125,7 @@ class _OrgListState extends State<OrgList> {
 
 // Widget for showing single org
 class ShowOrgsList extends StatelessWidget {
-  ShowOrgsList({Key key, this.org}) : super(key: key);
+  ShowOrgsList({Key? key, required this.org}) : super(key: key);
 
   Orgs org;
   @override

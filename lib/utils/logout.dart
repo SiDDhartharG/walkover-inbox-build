@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:inbox/main.dart';
+import 'package:inbox_flutter_app/main.dart';
 
 import '../constants/network_url.dart';
 import '../screens/login.dart';
 
 class Logout {
   static Box<String> currentTokenBox = Hive.box("accessToken");
-  static String signOutUrl = NetworkUrl.signOut;
+  static String signOutUrl = NetworkUrl.AuthUrl ?? "";
 
   static Future checkForLogout() async {
     dynamic token = currentTokenBox.get('currentToken');

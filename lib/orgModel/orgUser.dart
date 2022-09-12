@@ -6,18 +6,17 @@ part 'orgUser.g.dart';
 class OrgUser {
   OrgUser();
 
-  String id;
-  String orgId;
-  String userId;
-  String status;
-  num role;
-  bool isEnabled;
-  String disconnectedAt;
-  ProductsJoined productsJoined;
-  String createdAt;
-  String updatedAt;
-
-  factory OrgUser.fromJson(Map<String, dynamic> json) =>
-      _$OrgUserFromJson(json);
+  late String id;
+  late String orgId;
+  late String userId;
+  late String status;
+  late num role;
+  late bool isEnabled;
+  late String disconnectedAt;
+  late ProductsJoined productsJoined;
+  late String createdAt;
+  late String updatedAt;
+  
+  factory OrgUser.fromJson(Map<String,dynamic> json) => _$OrgUserFromJson(json);
   Map<String, dynamic> toJson() => _$OrgUserToJson(this);
 }

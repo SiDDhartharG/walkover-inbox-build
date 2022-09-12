@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_feathersjs/flutter_feathersjs.dart';
 import 'package:hive/hive.dart';
-import 'package:inbox/constants/network_url.dart';
-import 'package:inbox/screens/dashboard.dart';
+import 'package:inbox_flutter_app/constants/network_url.dart';
+import 'package:inbox_flutter_app/screens/dashboard.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:inbox/constants/app_colors.dart';
+import 'package:inbox_flutter_app/constants/app_colors.dart';
 
 class MyLogin extends StatefulWidget {
   dynamic publicKey;
-  MyLogin({Key key, this.publicKey}) : super(key: key);
+  MyLogin({Key? key, this.publicKey}) : super(key: key);
 
   @override
   _MyLoginState createState() => _MyLoginState();
 }
 
 class _MyLoginState extends State<MyLogin> {
-  Box<String> currentTokenBox;
-  Box<String> activeOrgIdBox;
-  FlutterFeathersjs flutterFeathersjs;
+  late Box<String> currentTokenBox;
+  late Box<String> activeOrgIdBox;
+  FlutterFeathersjs? flutterFeathersjs;
 
   void navigateToDashboard(link) async {
     dynamic currentToken = currentTokenBox.get('currentToken');
@@ -41,7 +41,7 @@ class _MyLoginState extends State<MyLogin> {
   }
 
   void fetchTokenViaLogin() async {
-    String url = NetworkUrl.login;
+    String url = NetworkUrl.AuthUrl ?? "";
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false);
     } else {
@@ -85,33 +85,30 @@ class _MyLoginState extends State<MyLogin> {
                     margin: const EdgeInsets.only(left: 35, right: 35),
                     child: Column(
                       children: [
-                        StreamBuilder<Uri>(
-                            stream: uriLinkStream,
-                            builder: (context, snapshot) {
-                              final link = snapshot.data ?? '';
-                              if (link.toString() != "") {
-                                SchedulerBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  navigateToDashboard(link);
-                                  // Your Code
-                                });
-                              }
-                              return ElevatedButton(
-                                onPressed: () {
-                                  fetchTokenViaLogin();
-                                },
-                                child: const Center(
-                                  child: Text(
-                                    'Login',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: AppColor.colorLoginButtonText,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                                style: const ButtonStyle(),
-                              );
-                            }),
+                        StreamBuilder<Widget?>(builder: (context, snapshot) {
+                          final link = snapshot.data ?? '';
+                          if (link.toString() != "") {
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              navigateToDashboard(link);
+                              // Your Code
+                            });
+                          }
+                          return ElevatedButton(
+                            onPressed: () {
+                              fetchTokenViaLogin();
+                            },
+                            child: const Center(
+                              child: Text(
+                                'Login',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: AppColor.colorLoginButtonText,
+                                    fontSize: 18),
+                              ),
+                            ),
+                            style: const ButtonStyle(),
+                          );
+                        }),
                       ],
                     ),
                   )

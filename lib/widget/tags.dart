@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TagsPage extends StatefulWidget {
   final dynamic customFuction;
   String dashboardSelectTag;
-  TagsPage({Key key, this.customFuction, this.dashboardSelectTag = ''})
+  TagsPage({Key? key, this.customFuction, this.dashboardSelectTag = ''})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class _TagsPageState extends State<TagsPage>
     "FIRST SENDER"
   ];
 
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
