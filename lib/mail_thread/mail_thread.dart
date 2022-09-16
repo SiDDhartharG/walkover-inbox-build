@@ -97,7 +97,7 @@ class _MailThreadListState extends State<MailThreadList> {
         throw 'Could not launch $url';
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 
@@ -608,7 +608,7 @@ class _MailThreadListState extends State<MailThreadList> {
             SizedBox(
               height: kPadding + 100,
             ),
-            ...?widget.mailItem.mail?.attachments.map((attachmentObject) {
+            ...?widget.mailItem.mail?.attachments?.map((attachmentObject) {
               return InkWell(
                   child: Text(
                     attachmentObject.toJson()["fileName"],
@@ -624,7 +624,7 @@ class _MailThreadListState extends State<MailThreadList> {
                           attachmentObject.toJson()["fileName"]);
                     }
                   });
-            }).toList(),
+            })?.toList(),
           ],
         ),
       ),

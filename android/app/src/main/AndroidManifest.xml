@@ -1,7 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="walkover.space.inbox">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="walkover.space.inbox">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATION" />
+	<uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
 	<application android:label="Inbox by SPACE" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
 		<activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
 			<!--
