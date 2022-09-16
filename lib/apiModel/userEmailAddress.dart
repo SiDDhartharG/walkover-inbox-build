@@ -38,10 +38,10 @@ class UserEmailAddressModel {
     var map = <String, dynamic>{};
     if (_userEmailAddress != null) {
       map['userEmailAddress'] =
-          _userEmailAddress?.map((v) => v.toJson()).toList();
+          _userEmailAddress?.map((v) => v.toJson())?.toList();
     }
     if (_unreadCount != null) {
-      map['unreadCount'] = _unreadCount?.map((v) => v.toJson()).toList();
+      map['unreadCount'] = _unreadCount?.map((v) => v.toJson())?.toList();
     }
     return map;
   }
@@ -339,7 +339,7 @@ class Email_address {
     }
     if (_userEmailAddresses != null) {
       map['user_email_addresses'] =
-          _userEmailAddresses?.map((v) => v.toJson()).toList();
+          _userEmailAddresses?.map((v) => v.toJson())?.toList();
     }
     return map;
   }
@@ -760,16 +760,16 @@ class Mail {
     var map = <String, dynamic>{};
     map['_id'] = _id;
     if (_to != null) {
-      map['to'] = _to?.map((v) => v.toJson()).toList();
+      map['to'] = _to?.map((v) => v.toJson())?.toList();
     }
     if (_from != null) {
       map['from'] = _from?.toJson();
     }
     if (_cc != null) {
-      map['cc'] = _cc?.map((v) => v.toJson()).toList();
+      map['cc'] = _cc?.map((v) => v.toJson())?.toList();
     }
     if (_bcc != null) {
-      map['bcc'] = _bcc?.map((v) => v.toJson()).toList();
+      map['bcc'] = _bcc?.map((v) => v.toJson())?.toList();
     }
     map['subject'] = _subject;
     if (_body != null) {

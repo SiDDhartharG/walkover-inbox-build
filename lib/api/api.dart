@@ -91,7 +91,7 @@ class APICalls {
   }
 
   static Future<Map<String, dynamic>> fileupload(String fileNames) async {
-    String fileName = const Uuid().v1() + "-";
+    String fileName = "${const Uuid().v1()}-";
     fileName += fileNames;
     String upload = NetworkUrl.fileupload;
     return jsonDecode((await protectedClient.post(Uri.parse(upload),
