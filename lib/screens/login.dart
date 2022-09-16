@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_feathersjs/flutter_feathersjs.dart';
 import 'package:hive/hive.dart';
 import 'package:inbox/constants/app_colors.dart';
 import 'package:inbox/constants/network_url.dart';
@@ -19,7 +18,6 @@ class MyLogin extends StatefulWidget {
 class _MyLoginState extends State<MyLogin> {
   Box<String> currentTokenBox;
   Box<String> activeOrgIdBox;
-  FlutterFeathersjs flutterFeathersjs;
 
   void navigateToDashboard(link) async {
     dynamic currentToken = currentTokenBox.get('currentToken');
