@@ -198,8 +198,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     currentTokenBox = Hive.box("accessToken");
     activeOrgIdBox = Hive.box("activeOrgId");
-    // currentTokenBox.put("currentToken", '${dotenv.env["PERSONAL_TOKEN"]}');
-    // activeOrgIdBox.put("orgId", '${dotenv.env["ORG_ID"]}');
+    currentTokenBox.put("currentToken", '${dotenv.env["PERSONAL_TOKEN"]}');
+    activeOrgIdBox.put("orgId", '${dotenv.env["ORG_ID"]}');
     fetchPublickey();
     Timer(
         const Duration(seconds: 2),
