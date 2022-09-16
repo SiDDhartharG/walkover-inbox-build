@@ -542,7 +542,8 @@ class ShowMailsList extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                selectedMail.mail.attachments.isEmpty
+                                (selectedMail.mail.attachments == null ||
+                                        selectedMail.mail.attachments.isEmpty)
                                     ? Container()
                                     : Container(
                                         child: Icon(Icons.attach_file_rounded),
