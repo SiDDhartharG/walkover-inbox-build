@@ -615,13 +615,19 @@ class _MailThreadListState extends State<MailThreadList> {
                     textAlign: TextAlign.left,
                   ),
                   onTap: () {
+                    String path =
+                        attachmentObject.toJson().containsKey("filePath")
+                            ? "filePath"
+                            : "path";
+                    String name =
+                        attachmentObject.toJson().containsKey("fileName")
+                            ? "fileName"
+                            : "name";
                     if (Platform.isWindows || Platform.isMacOS) {
-                      _launchURL(
-                          Uri.parse(attachmentObject.toJson()["filePath"]));
+                      _launchURL(Uri.parse(attachmentObject.toJson()[path]));
                     } else {
-                      downloadFile(
-                          Uri.parse(attachmentObject.toJson()["filePath"]),
-                          attachmentObject.toJson()["fileName"]);
+                      downloadFile(Uri.parse(attachmentObject.toJson()[path]),
+                          attachmentObject.toJson()[name]);
                     }
                   });
             })?.toList(),
