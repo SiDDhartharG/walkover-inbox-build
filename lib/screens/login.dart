@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
@@ -61,6 +62,60 @@ class _MyLoginState extends State<MyLogin> {
     }
   }
 
+  __rednderbuilder() {
+    if (!kIsWeb) {
+      return StreamBuilder<Uri>(
+          stream: uriLinkStream,
+          builder: (context, snapshot) {
+            final link = snapshot.data ?? '';
+            if (link.toString() != "") {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                navigateToDashboard(link);
+                // Your Code
+              });
+            }
+            return ElevatedButton(
+              onPressed: () {
+                fetchTokenViaLogin();
+              },
+              child: const Center(
+                child: Text(
+                  'Login',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: AppColor.colorLoginButtonText, fontSize: 18),
+                ),
+              ),
+              style: const ButtonStyle(),
+            );
+          });
+    } else {
+      return StreamBuilder<Widget>(builder: (context, snapshot) {
+        final link = snapshot.data ?? '';
+        if (link.toString() != "") {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            navigateToDashboard(link);
+            // Your Code
+          });
+        }
+        return ElevatedButton(
+          onPressed: () {
+            fetchTokenViaLogin();
+          },
+          child: const Center(
+            child: Text(
+              'Login',
+              textAlign: TextAlign.left,
+              style:
+                  TextStyle(color: AppColor.colorLoginButtonText, fontSize: 18),
+            ),
+          ),
+          style: const ButtonStyle(),
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,35 +137,7 @@ class _MyLoginState extends State<MyLogin> {
                   Container(
                     margin: const EdgeInsets.only(left: 35, right: 35),
                     child: Column(
-                      children: [
-                        StreamBuilder<Uri>(
-                            stream: uriLinkStream,
-                            builder: (context, snapshot) {
-                              final link = snapshot.data ?? '';
-                              if (link.toString() != "") {
-                                SchedulerBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  navigateToDashboard(link);
-                                  // Your Code
-                                });
-                              }
-                              return ElevatedButton(
-                                onPressed: () {
-                                  fetchTokenViaLogin();
-                                },
-                                child: const Center(
-                                  child: Text(
-                                    'Login',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: AppColor.colorLoginButtonText,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                                style: const ButtonStyle(),
-                              );
-                            }),
-                      ],
+                      children: [__rednderbuilder()],
                     ),
                   )
                 ],
