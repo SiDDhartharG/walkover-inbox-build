@@ -609,25 +609,22 @@ class _MailThreadListState extends State<MailThreadList> {
               height: kPadding + 100,
             ),
             ...?widget.mailItem.mail?.attachments?.map((attachmentObject) {
+              var path = attachmentObject.toJson()["filePath"] != null
+                  ? attachmentObject.toJson()["filePath"]
+                  : attachmentObject.toJson()["path"];
+              var name = attachmentObject.toJson()["fileName"] != null
+                  ? attachmentObject.toJson()["fileName"]
+                  : attachmentObject.toJson()["name"];
               return InkWell(
                   child: Text(
-                    attachmentObject.toJson()["fileName"],
+                    attachmentObject.toJson()["fileName"] ?? "Attachment",
                     textAlign: TextAlign.left,
                   ),
                   onTap: () {
-                    String path =
-                        attachmentObject.toJson().containsKey("filePath")
-                            ? "filePath"
-                            : "path";
-                    String name =
-                        attachmentObject.toJson().containsKey("fileName")
-                            ? "fileName"
-                            : "name";
                     if (Platform.isWindows || Platform.isMacOS) {
-                      _launchURL(Uri.parse(attachmentObject.toJson()[path]));
+                      _launchURL(Uri.parse(path));
                     } else {
-                      downloadFile(Uri.parse(attachmentObject.toJson()[path]),
-                          attachmentObject.toJson()[name]);
+                      downloadFile(Uri.parse(path), (name));
                     }
                   });
             })?.toList(),
