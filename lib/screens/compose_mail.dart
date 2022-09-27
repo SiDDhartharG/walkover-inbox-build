@@ -659,6 +659,7 @@ class ComposeScreenState extends State<ComposeScreen>
           attachment.isNotEmpty
               ? Expanded(
                   child: Column(
+                    
                   children: attachment.map((a) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
